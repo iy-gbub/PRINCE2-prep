@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>PRINCE2® 7 MasterPrep: Interactive Reader & Testing Suite</title>
+  <title>PRINCE2® 7 MasterPrep</title>
 
   <!-- PWA & Mobile Meta Tags -->
   <link rel="manifest" href="./manifest.json" />
@@ -17,13 +17,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Mozilla PDF.js In-App Canvas Engine -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    .scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
+    .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
   </style>
 </head>
@@ -57,7 +54,7 @@
   <!-- MOBILE/DESKTOP HORIZONTAL SUB-NAVIGATION -->
   <nav class="bg-indigo-900 border-b border-indigo-800 text-white overflow-x-auto scrollbar-thin sticky top-14 sm:top-16 z-40">
     <div class="max-w-7xl mx-auto px-2 flex whitespace-nowrap text-xs">
-      <button onclick="switchTab('reader')" id="nav-reader" class="nav-btn px-4 py-2.5 font-bold border-b-2 border-white text-white">Book & Sections</button>
+      <button onclick="switchTab('reader')" id="nav-reader" class="nav-btn px-4 py-2.5 font-bold border-b-2 border-white text-white">Manual Chapters</button>
       <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2.5 font-medium text-indigo-200 hover:text-white">Trends</button>
       <button onclick="switchTab('sectionquizzes')" id="nav-sectionquizzes" class="nav-btn px-4 py-2.5 font-medium text-indigo-200 hover:text-white">Chapter Tests</button>
       <button onclick="switchTab('flashtests')" id="nav-flashtests" class="nav-btn px-4 py-2.5 font-medium text-indigo-200 hover:text-white">Timed Drills</button>
@@ -69,80 +66,30 @@
 
   <main class="max-w-7xl mx-auto p-3 sm:p-6 w-full flex-1">
 
-    <!-- ================= 1. IN-APP CANVAS PDF VIEWER & DIRECTORY ================= -->
+    <!-- ================= 1. SECTION DIRECTORY & PRECISE JUMP LINKS ================= -->
     <section id="panel-reader" class="space-y-4">
-      <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm">
-        
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-100">
-          <div>
-            <h2 class="text-base sm:text-lg font-black text-slate-800" id="currentSectionTitle">Chapter 1: Introduction</h2>
-            <p class="text-[11px] text-slate-500">Managing Successful Projects with PRINCE2® 7th Edition</p>
-          </div>
-          <div class="flex items-center gap-2 w-full sm:w-auto">
-            <button onclick="toggleCurrentReadStatus()" id="btnMarkRead" class="flex-1 sm:flex-none px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-300 hover:bg-slate-100">
-              <i class="fa-regular fa-square mr-1"></i> Mark as Read
-            </button>
-            <button onclick="jumpToCurrentQuiz()" class="flex-1 sm:flex-none px-3.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700">
-              <i class="fa-solid fa-pencil mr-1"></i> Take Quiz
-            </button>
+      
+      <!-- Reading Overview Card -->
+      <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-2xl p-4 sm:p-6 text-white shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-widest bg-indigo-500/40 text-indigo-200 px-2.5 py-0.5 rounded-full">Official 7th Edition Manual</span>
+          <h2 class="text-lg sm:text-xl font-black mt-1">Managing Successful Projects with PRINCE2®</h2>
+          <p class="text-xs text-slate-300 mt-0.5 max-w-lg">
+            Tap <strong>Read Chapter</strong> to jump straight to that exact page number in high resolution with full pinch-to-zoom and text scrolling[cite: 2].
+          </p>
+        </div>
+        <div class="bg-white/10 border border-white/20 p-3 rounded-xl min-w-[160px] text-right">
+          <div class="text-[10px] uppercase text-indigo-200 font-bold">Progress Tracker</div>
+          <div class="text-xl font-black text-emerald-400" id="readingStatsText">0 of 19 Read</div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+            <div id="readingProgressFill" class="bg-emerald-400 h-full transition-all" style="width: 0%"></div>
           </div>
         </div>
+      </div>
 
-        <div class="my-3 flex flex-col sm:flex-row gap-3">
-          <div class="flex-1">
-            <label for="chapterSelect" class="text-[10px] font-bold uppercase text-slate-400 block mb-1">Jump to Chapter</label>
-            <select id="chapterSelect" onchange="onSelectChapter(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold text-slate-700 focus:outline-indigo-500">
-              <!-- Populated dynamically -->
-            </select>
-          </div>
-          <div class="sm:w-60">
-            <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
-              <span>Manual Completion</span>
-              <span id="readingStatsText">0 of 19 Read</span>
-            </div>
-            <div class="w-full bg-slate-100 h-9 rounded-xl p-1.5 flex items-center border border-slate-200">
-              <div id="readingProgressFill" class="bg-emerald-500 h-full rounded-lg transition-all" style="width: 0%"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- FULL-SCREEN RESPONSIVE READER -->
-        <div id="pdfMasterContainer" class="border border-slate-300 rounded-2xl overflow-hidden bg-slate-950 shadow-md flex flex-col transition-all duration-200">
-          
-          <!-- Sticky Reader Toolbar -->
-          <div class="bg-slate-900/95 backdrop-blur text-white p-2 sm:p-2.5 px-3 sm:px-4 flex justify-between items-center text-xs border-b border-slate-800 shrink-0 z-30">
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <button onclick="scrollPage(-1)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg active:scale-95 transition" title="Previous Page">
-                <i class="fa-solid fa-chevron-up"></i>
-              </button>
-              <span class="font-mono text-[11px] sm:text-xs">p. <strong id="pdfCurrentPage" class="text-indigo-400">20</strong> / <span id="pdfTotalPages">363</span></span>
-              <button onclick="scrollPage(1)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg active:scale-95 transition" title="Next Page">
-                <i class="fa-solid fa-chevron-down"></i>
-              </button>
-            </div>
-
-            <div class="flex items-center gap-1 sm:gap-2">
-              <button onclick="zoomPdf(0.2)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg" title="Zoom In">
-                <i class="fa-solid fa-magnifying-glass-plus"></i>
-              </button>
-              <button onclick="zoomPdf(-0.2)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg" title="Zoom Out">
-                <i class="fa-solid fa-magnifying-glass-minus"></i>
-              </button>
-              <button onclick="fitWidth()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold" title="Fit to Screen Width">
-                Fit
-              </button>
-              <button onclick="toggleAppFullscreen()" id="btnFullscreen" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-bold text-[11px] flex items-center gap-1">
-                <i class="fa-solid fa-expand"></i> <span class="hidden sm:inline">Fullscreen</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Continuous Scroll Target Viewport -->
-          <div id="pdfViewportContainer" class="w-full h-[70vh] overflow-y-auto overflow-x-auto flex flex-col items-center p-2 sm:p-4 bg-slate-950 gap-4 scrollbar-thin touch-pan-y">
-            <!-- Continuous Page Wrappers Render Here -->
-          </div>
-        </div>
-
+      <!-- Chapter Directory Cards -->
+      <div id="chapterDirectoryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <!-- Injected via JavaScript -->
       </div>
     </section>
 
@@ -329,25 +276,25 @@
        1. BOOK CONTENTS DIRECTORY (PAGE MAPPINGS)
     ========================================================== */
     const bookSections = [
-      { id: "ch1", title: "Chapter 1: Introduction", page: 20 },
-      { id: "ch2", title: "Chapter 2: Principles", page: 38 },
-      { id: "ch3", title: "Chapter 3: People", page: 50 },
-      { id: "ch4", title: "Chapter 4: Introduction to Practices", page: 68 },
-      { id: "ch5", title: "Chapter 5: Business Case", page: 74 },
-      { id: "ch6", title: "Chapter 6: Organizing", page: 92 },
-      { id: "ch7", title: "Chapter 7: Plans", page: 116 },
-      { id: "ch8", title: "Chapter 8: Quality", page: 146 },
-      { id: "ch9", title: "Chapter 9: Risk", page: 166 },
-      { id: "ch10", title: "Chapter 10: Issues", page: 186 },
-      { id: "ch11", title: "Chapter 11: Progress", page: 204 },
-      { id: "ch12", title: "Chapter 12: Intro to Processes", page: 232 },
-      { id: "ch13", title: "Chapter 13: Starting Up (SU)", page: 238 },
-      { id: "ch14", title: "Chapter 14: Directing (DP)", page: 248 },
-      { id: "ch15", title: "Chapter 15: Initiating (IP)", page: 258 },
-      { id: "ch16", title: "Chapter 16: Controlling a Stage (CS)", page: 270 },
-      { id: "ch17", title: "Chapter 17: Managing Product Delivery (MP)", page: 280 },
-      { id: "ch18", title: "Chapter 18: Stage Boundary (SB)", page: 288 },
-      { id: "ch19", title: "Chapter 19: Closing (CP)", page: 296 }
+      { id: "ch1", title: "Chapter 1: Introduction", page: 20, desc: "Five integrated elements, project characteristics, and performance targets[cite: 2]." },
+      { id: "ch2", title: "Chapter 2: Principles", page: 38, desc: "The 7 non-negotiable principles underpinning all PRINCE2 projects[cite: 2]." },
+      { id: "ch3", title: "Chapter 3: People", page: 50, desc: "Leading change, communication approaches, and team psychological safety[cite: 2]." },
+      { id: "ch4", title: "Chapter 4: Intro to Practices", page: 68, desc: "How practices provide the specific treatment across the project lifecycle[cite: 2]." },
+      { id: "ch5", title: "Chapter 5: Business Case", page: 74, desc: "Outputs, outcomes, benefits, and continued investment justification[cite: 2]." },
+      { id: "ch6", title: "Chapter 6: Organizing", page: 92, desc: "Project Board roles, stakeholder interests, and organizational design[cite: 2]." },
+      { id: "ch7", title: "Chapter 7: Plans", page: 116, desc: "Product-based planning, stages, planning horizons, and schedules[cite: 2]." },
+      { id: "ch8", title: "Chapter 8: Quality", page: 146, desc: "User quality expectations, specifications, QA vs PA, and acceptance[cite: 2]." },
+      { id: "ch9", title: "Chapter 9: Risk", page: 166, desc: "Threats, opportunities, risk procedures, and tolerance thresholds[cite: 2]." },
+      { id: "ch10", title: "Chapter 10: Issues", page: 186, desc: "Issue types, change authority delegation, and change budgets[cite: 2]." },
+      { id: "ch11", title: "Chapter 11: Progress", page: 204, desc: "Manage by exception, tolerance monitoring, and exception reports[cite: 2]." },
+      { id: "ch12", title: "Chapter 12: Intro to Processes", page: 232, desc: "The 4 management layers and the complete project lifecycle model[cite: 2]." },
+      { id: "ch13", title: "Chapter 13: Starting Up (SU)", page: 238, desc: "Pre-project activities, project brief, mandate, and initiation plan[cite: 2]." },
+      { id: "ch14", title: "Chapter 14: Directing (DP)", page: 248, desc: "Project Board governance, stage authorizations, and ad-hoc direction[cite: 2]." },
+      { id: "ch15", title: "Chapter 15: Initiating (IP)", page: 258, desc: "Assembling the PID, management approaches, and detailed project plan[cite: 2]." },
+      { id: "ch16", title: "Chapter 16: Controlling a Stage (CS)", page: 270, desc: "Day-to-day PM work packages, issue monitoring, and progress checks[cite: 2]." },
+      { id: "ch17", title: "Chapter 17: Managing Product Delivery (MP)", page: 280, desc: "Team Manager acceptance, execution, and handover of work packages[cite: 2]." },
+      { id: "ch18", title: "Chapter 18: Stage Boundary (SB)", page: 288, desc: "End stage reviews, next stage planning, and updating the Business Case[cite: 2]." },
+      { id: "ch19", title: "Chapter 19: Closing (CP)", page: 296, desc: "Decommissioning, project evaluations, and post-project handover[cite: 2]." }
     ];
 
     /* ==========================================================
@@ -355,64 +302,64 @@
     ========================================================== */
     const sectionQuestions = {
       "ch1": [
-        { q: "Which of the following is NOT one of the 5 integrated elements of PRINCE2?", options: ["Principles", "Practices", "People", "Commercial Procurement"], a: 3, ref: "Section 1.2: Principles, People, Practices, Processes, Context." },
-        { q: "How does PRINCE2 define a project?", options: ["A temporary organization created for delivering business products according to an agreed business case", "Continuous routine BAU", "A software scrum backlog", "A commercial tender"], a: 0, ref: "Section 1.3: Definition of Project." }
+        { q: "Which of the following is NOT one of the 5 integrated elements of PRINCE2?", options: ["Principles", "Practices", "People", "Commercial Procurement"], a: 3, ref: "Section 1.2: The five elements are Principles, People, Practices, Processes, and Project Context[cite: 2]." },
+        { q: "How does PRINCE2 define a project?", options: ["A temporary organization created for delivering business products according to an agreed business case", "Continuous business operations and functional upkeep", "A series of ad-hoc tickets managed by a Scrum Master", "A legally binding outsourced supplier relationship"], a: 0, ref: "Section 1.3: Definition of a Project[cite: 2]." }
       ],
       "ch2": [
-        { q: "What are the 7 performance targets managed using tolerances in PRINCE2 7?", options: ["Benefits, Costs, Time, Quality, Scope, Sustainability, and Risk", "Budget, Revenue, Resources, Safety, Governance, Time, Scope", "Hours, Milestones, Budget, Team, Plans, Tolerances, Risk", "Capital, Operating Expense, Timeline, ESG, Quality, Board, Scope"], a: 0, ref: "Section 2.4: 7 performance target tolerances." },
-        { q: "What is the minimum number of stages permitted in any PRINCE2 project?", options: ["At least two stages: initiation and one delivery stage", "Only one delivery stage", "Three stages: Initiation, Build, Handover", "Four stages"], a: 0, ref: "Section 2.5: Manage by stages mandates an initiation stage and at least one delivery stage." }
+        { q: "What are the 7 performance targets managed using tolerances in PRINCE2 7?", options: ["Benefits, Costs, Time, Quality, Scope, Sustainability, and Risk", "Budget, Revenue, Resources, Safety, Governance, Time, Scope", "Hours, Milestones, Budget, Team, Plans, Tolerances, Risk", "Capital, Operating Expense, Timeline, ESG, Quality, Board, Scope"], a: 0, ref: "Section 2.4: Limits of delegated authority cover 7 performance aspects[cite: 2]." },
+        { q: "What is the minimum number of stages permitted in any PRINCE2 project?", options: ["At least two stages: initiation and one delivery stage", "Only one delivery stage", "Three stages: Initiation, Build, Handover", "Four stages"], a: 0, ref: "Section 2.5: Manage by stages mandates an initiation stage and at least one further stage[cite: 2]." }
       ],
       "ch3": [
-        { q: "Under the PRINCE2 7 'People' element, who creates psychological safety?", options: ["All team members through their day-to-day interactions", "Only the Project Executive", "The HR Director only", "External Project Assurance only"], a: 0, ref: "Section 3.3.2: Psychological safety is fostered collectively." }
+        { q: "Under the PRINCE2 7 'People' element, who creates psychological safety?", options: ["All team members through their day-to-day interactions", "Only the Project Executive", "The HR Director only", "External Project Assurance only"], a: 0, ref: "Section 3.3.2: Psychological safety is fostered collectively through daily interactions[cite: 2]." }
       ],
       "ch4": [
-        { q: "What is a PRINCE2 Practice?", options: ["An aspect of project management that must be applied consistently throughout the project lifecycle", "An optional Agile backlog template", "A post-project audit checklist", "A commercial invoice standard"], a: 0, ref: "Section 4.1: Definition of Practice." }
+        { q: "What is a PRINCE2 Practice?", options: ["An aspect of project management that must be applied consistently throughout the project lifecycle", "An optional Agile backlog template", "A post-project audit checklist", "A commercial invoice standard"], a: 0, ref: "Section 4.1: Definition of Practice[cite: 2]." }
       ],
       "ch5": [
-        { q: "Who is single-point accountable for the Business Case throughout the project lifecycle?", options: ["The Project Executive", "The Project Manager", "The Senior Supplier", "The Team Manager"], a: 0, ref: "Section 5.6 & 6.2.4.1: The Executive owns the Business Case and secures funding." },
-        { q: "In PRINCE2, an 'Outcome' is defined as:", options: ["The result of change, normally affecting real-world behaviour and circumstances", "The physical deliverable produced by an activity", "The net profit realized after three years", "A tolerance exception report"], a: 0, ref: "Section 5.1: Outputs enable outcomes, which allow benefits to be realized." }
+        { q: "Who is single-point accountable for the Business Case throughout the project lifecycle?", options: ["The Project Executive", "The Project Manager", "The Senior Supplier", "The Team Manager"], a: 0, ref: "Section 5.6 & 6.2.4.1: The Executive owns the Business Case and secures funding[cite: 2]." },
+        { q: "In PRINCE2, an 'Outcome' is defined as:", options: ["The result of change, normally affecting real-world behaviour and circumstances", "The physical deliverable produced by an activity", "The net profit realized after three years", "A tolerance exception report"], a: 0, ref: "Section 5.1: Outputs enable outcomes, which allow benefits to be realized[cite: 2]." }
       ],
       "ch6": [
-        { q: "Which two roles CANNOT be combined under any circumstances?", options: ["Project Executive and Project Manager", "Project Executive and Senior User", "Project Manager and Team Manager", "Project Manager and Project Support"], a: 0, ref: "Section 6.2.4.1: The single focus of the PM must remain separate from the Executive." }
+        { q: "Which two roles CANNOT be combined under any circumstances?", options: ["Project Executive and Project Manager", "Project Executive and Senior User", "Project Manager and Team Manager", "Project Manager and Project Support"], a: 0, ref: "Section 6.2.4.1: The single focus of the PM must remain separate from the Executive[cite: 2]." }
       ],
       "ch7": [
-        { q: "What is the first step in the PRINCE2 product-based planning technique?", options: ["Write the Project Product Description", "Draw a Gantt chart", "Draft the project budget", "Allocate work packages to suppliers"], a: 0, ref: "Section 7.3.2: Planning starts with defining and analysing products." }
+        { q: "What is the first step in the PRINCE2 product-based planning technique?", options: ["Write the Project Product Description", "Draw a Gantt chart", "Draft the project budget", "Allocate work packages to suppliers"], a: 0, ref: "Section 7.3.2: Planning starts with defining and analysing products[cite: 2]." }
       ],
       "ch8": [
-        { q: "How does Quality Assurance differ from Project Assurance?", options: ["Quality Assurance is independent of the project team and business-owned; Project Assurance is board-owned", "They are identical terms", "The Project Manager performs Quality Assurance", "Project Assurance only reviews code quality"], a: 0, ref: "Section 8.2.3: QA is independent of the project management team." }
+        { q: "How does Quality Assurance differ from Project Assurance?", options: ["Quality Assurance is independent of the project team and business-owned; Project Assurance is board-owned", "They are identical terms", "The Project Manager performs Quality Assurance", "Project Assurance only reviews code quality"], a: 0, ref: "Section 8.2.3: QA is independent of the project management team[cite: 2]." }
       ],
       "ch9": [
-        { q: "In PRINCE2, a risk with a positive impact on objectives is termed an:", options: ["Opportunity", "Windfall", "Upside benefit", "Asset"], a: 0, ref: "Section 9.1: 'Threat' for negative risks, 'opportunity' for positive risks." }
+        { q: "In PRINCE2, a risk with a positive impact on objectives is termed an:", options: ["Opportunity", "Windfall", "Upside benefit", "Asset"], a: 0, ref: "Section 9.1: PRINCE2 uses 'threat' for negative risks and 'opportunity' for positive risks[cite: 2]." }
       ],
       "ch10": [
-        { q: "Why would a Project Board choose to appoint a Change Authority?", options: ["To relieve board overhead and expedite change decisions on large projects", "To dismiss the Project Manager", "To remove stage tolerances", "To draft the project mandate"], a: 0, ref: "Section 6.4.5: Change Authority delegates decision-making close to where knowledge resides." }
+        { q: "Why would a Project Board choose to appoint a Change Authority?", options: ["To relieve board overhead and expedite change decisions on large projects", "To dismiss the Project Manager", "To remove stage tolerances", "To draft the project mandate"], a: 0, ref: "Section 6.4.5: Change Authority delegates decision-making to the appropriate operational level[cite: 2]." }
       ],
       "ch11": [
-        { q: "When must the Project Manager produce and submit an Exception Report?", options: ["Immediately when a stage or project tolerance is forecast to be exceeded", "At the regular monthly board review", "Only after a stage plan runs completely out of money", "Never; the Board monitors this automatically"], a: 0, ref: "Section 2.4 & Chapter 11: Manage by Exception requires immediate escalation upon forecast breach." }
+        { q: "When must the Project Manager produce and submit an Exception Report?", options: ["Immediately when a stage or project tolerance is forecast to be exceeded", "At the regular monthly board review", "Only after a stage plan runs completely out of money", "Never; the Board monitors this automatically"], a: 0, ref: "Section 2.4 & Chapter 11: Manage by Exception requires immediate escalation upon forecast breach[cite: 2]." }
       ],
       "ch12": [
-        { q: "Which management layer carries out the 'Directing a Project' process?", options: ["The Project Board", "The Project Manager", "The Team Managers", "Corporate Commissioning only"], a: 0, ref: "Section 12.2: Directing a Project is owned by the Project Board." }
+        { q: "Which management layer carries out the 'Directing a Project' process?", options: ["The Project Board", "The Project Manager", "The Team Managers", "Corporate Commissioning only"], a: 0, ref: "Section 12.2: Directing a Project is owned by the Project Board[cite: 2]." }
       ],
       "ch13": [
-        { q: "What document triggers the 'Starting Up a Project' process?", options: ["Project Mandate", "PID", "End Stage Report", "Exception Plan"], a: 0, ref: "Section 13.3: The project mandate from the business activates starting up a project." }
+        { q: "What document triggers the 'Starting Up a Project' process?", options: ["Project Mandate", "PID", "End Stage Report", "Exception Plan"], a: 0, ref: "Section 13.3: The project mandate from the business activates starting up a project[cite: 2]." }
       ],
       "ch14": [
-        { q: "The 'Directing a Project' process runs:", options: ["Continuously from project start-up authorization until project closure", "Only during the initiation stage", "Only when an exception report is submitted", "Exclusively after project closure"], a: 0, ref: "Chapter 14: Directing a Project covers the whole lifecycle of the project." }
+        { q: "The 'Directing a Project' process runs:", options: ["Continuously from project start-up authorization until project closure", "Only during the initiation stage", "Only when an exception report is submitted", "Exclusively after project closure"], a: 0, ref: "Chapter 14: Directing a Project covers the whole lifecycle of the project[cite: 2]." }
       ],
       "ch15": [
-        { q: "What management product is assembled during 'Initiating a Project' to serve as the baseline contract?", options: ["Project Initiation Documentation (PID)", "Work Package Description", "Highlight Report", "Daily Log"], a: 0, ref: "Chapter 15 & Section 4.3.1: The PID forms the baseline contract." }
+        { q: "What management product is assembled during 'Initiating a Project' to serve as the baseline contract?", options: ["Project Initiation Documentation (PID)", "Work Package Description", "Highlight Report", "Daily Log"], a: 0, ref: "Chapter 15 & Section 4.3.1: The PID forms the baseline contract[cite: 2]." }
       ],
       "ch16": [
-        { q: "Who carries out day-to-day work in the 'Controlling a Stage' process?", options: ["The Project Manager", "The Senior Supplier", "The Project Executive", "The Team Manager"], a: 0, ref: "Chapter 16: Controlling a Stage is the Project Manager's core execution process." }
+        { q: "Who carries out day-to-day work in the 'Controlling a Stage' process?", options: ["The Project Manager", "The Senior Supplier", "The Project Executive", "The Team Manager"], a: 0, ref: "Chapter 16: Controlling a Stage is the Project Manager's core execution process[cite: 2]." }
       ],
       "ch17": [
-        { q: "What product formally authorizes work from the Project Manager to a Team Manager?", options: ["Work Package Description", "Stage Plan", "Project Product Description", "Lessons Log"], a: 0, ref: "Chapter 17 & Section 7.5: Work Packages authorize and govern product delivery." }
+        { q: "What product formally authorizes work from the Project Manager to a Team Manager?", options: ["Work Package Description", "Stage Plan", "Project Product Description", "Lessons Log"], a: 0, ref: "Chapter 17 & Section 7.5: Work Packages authorize and govern product delivery[cite: 2]." }
       ],
       "ch18": [
-        { q: "In 'Managing a Stage Boundary', what does the PM prepare to seek approval for the next stage?", options: ["End Stage Report and next Stage Plan", "Project Mandate", "Work Package", "Exception Report"], a: 0, ref: "Chapter 18: Stage Boundary reviews the current stage and plans the next." }
+        { q: "In 'Managing a Stage Boundary', what does the PM prepare to seek approval for the next stage?", options: ["End Stage Report and next Stage Plan", "Project Mandate", "Work Package", "Exception Report"], a: 0, ref: "Chapter 18: Stage Boundary reviews the current stage and plans the next[cite: 2]." }
       ],
       "ch19": [
-        { q: "At project closure, post-project benefits realization tracking transfers to:", options: ["The Business Layer / Senior User", "The Project Manager", "The Supplier's Scrum Master", "The Decommissioning contractor"], a: 0, ref: "Section 5.6 & Chapter 19: Post-project accountability rests with the business/senior user." }
+        { q: "At project closure, post-project benefits realization tracking transfers to:", options: ["The Business Layer / Senior User", "The Project Manager", "The Supplier's Scrum Master", "The Decommissioning contractor"], a: 0, ref: "Section 5.6 & Chapter 19: Post-project accountability rests with the business/senior user[cite: 2]." }
       ]
     };
 
@@ -431,224 +378,104 @@
     });
 
     const activeRecallCards = [
-      { tag: "Principle", front: "Manage by Exception", back: "<b>7 Tolerances:</b> Benefits, Cost, Time, Quality, Scope, Sustainability, Risk.<br/><br/>If a breach is forecast, the PM escalates immediately with an <b>Exception Report</b>." },
-      { tag: "Role", front: "The Project Executive", back: "Single point of accountability. Represents Business, secures funds, and owns the Business Case. Cannot be combined with the Project Manager role." },
-      { tag: "Role", front: "The Senior User", back: "Represents users. Defines specifications, acceptance criteria, and is accountable for post-project benefits realization." },
-      { tag: "Management Product", front: "Project Initiation Documentation (PID)", back: "The 'contract' between PM and Board. Contains project plan, business case, approaches, controls, and tailoring." },
-      { tag: "Quality Practice", front: "PA vs QA", back: "<b>Project Assurance:</b> Board-owned, verifies PM performance.<br/><b>Quality Assurance:</b> Independent, business-owned, verifies corporate compliance." },
-      { tag: "Plans Practice", front: "Product Breakdown Structure (PBS)", back: "A hierarchy of required products before activities are scheduled. Drives the Product Flow Diagram and WBS." },
-      { tag: "Progress Practice", front: "Exception Plan", back: "Replaces the current Stage Plan (or Project Plan) when a tolerance exception occurs, approved by the Project Board." },
-      { tag: "Principle", front: "Tailor to Suit", back: "Mandatory tailoring to scale, complexity, risk, and delivery methods while upholding all 7 principles." }
+      { tag: "Principle", front: "Manage by Exception", back: "<b>7 Tolerances:</b> Benefits, Cost, Time, Quality, Scope, Sustainability, Risk.<br/><br/>If a breach is forecast, the PM escalates immediately with an <b>Exception Report</b>[cite: 2]." },
+      { tag: "Role", front: "The Project Executive", back: "Single point of accountability. Represents Business, secures funds, and owns the Business Case. Cannot be combined with the Project Manager role[cite: 2]." },
+      { tag: "Role", front: "The Senior User", back: "Represents users. Defines specifications, acceptance criteria, and is accountable for post-project benefits realization[cite: 2]." },
+      { tag: "Management Product", front: "Project Initiation Documentation (PID)", back: "The 'contract' between PM and Board. Contains project plan, business case, approaches, controls, and tailoring[cite: 2]." },
+      { tag: "Quality Practice", front: "PA vs QA", back: "<b>Project Assurance:</b> Board-owned, verifies PM performance.<br/><b>Quality Assurance:</b> Independent, business-owned, verifies corporate compliance[cite: 2]." },
+      { tag: "Plans Practice", front: "Product Breakdown Structure (PBS)", back: "A hierarchy of required products before activities are scheduled. Drives the Product Flow Diagram and WBS[cite: 2]." },
+      { tag: "Progress Practice", front: "Exception Plan", back: "Replaces the current Stage Plan (or Project Plan) when a tolerance exception occurs, approved by the Project Board[cite: 2]." },
+      { tag: "Principle", front: "Tailor to Suit", back: "Mandatory tailoring to scale, complexity, risk, and delivery methods while upholding all 7 principles[cite: 2]." }
     ];
 
     /* ==========================================================
        3. PERSISTENT STORAGE
     ========================================================== */
-    let appState = JSON.parse(localStorage.getItem('p2_canvas_scroll_state')) || {
+    let appState = JSON.parse(localStorage.getItem('p2_clean_reader_state')) || {
       readSections: {},
-      currentSection: "ch1",
       testHistory: [],
       sectionScores: {},
       masteredCards: []
     };
 
     function saveAppState() {
-      localStorage.setItem('p2_canvas_scroll_state', JSON.stringify(appState));
+      localStorage.setItem('p2_clean_reader_state', JSON.stringify(appState));
       updateGlobalMetricsUI();
     }
 
     /* ==========================================================
-       4. TOUCH-ENABLED CONTINUOUS SCROLL PDF ENGINE (PDF.JS)
+       4. PRECISE JUMP LINK GENERATOR (PDF.JS CLOUD ENGINE)
     ========================================================== */
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    function getChapterPdfUrl(pageNum) {
+      // Constructs an absolute URL for the PDF from current domain/repo path
+      const currentLoc = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+      const fullPdfUrl = currentLoc + 'Managing-Successful-Projects-With-PRINCE2-7.pdf';
+      
+      // Routes through Mozilla's hosted viewer which enforces #page=N across mobile and desktop
+      return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(fullPdfUrl)}#page=${pageNum}`;
+    }
 
-    const PDF_URL = './Managing-Successful-Projects-With-PRINCE2-7.pdf';
-    let pdfDoc = null;
-    let currentVisiblePage = 20;
-    let pdfScale = 1.0;
-    let renderedPages = new Set();
-    let isFullscreenMode = false;
+    function renderChapterCards() {
+      const grid = document.getElementById('chapterDirectoryGrid');
+      const quizSelect = document.getElementById('quizSectionChooser');
+      grid.innerHTML = '';
+      quizSelect.innerHTML = '';
 
-    let touchStartDistance = 0;
-    let initialScaleOnPinch = 1.0;
+      bookSections.forEach(sec => {
+        const isRead = !!appState.readSections[sec.id];
+        const directUrl = getChapterPdfUrl(sec.page);
 
-    function initPdf() {
-      pdfjsLib.getDocument(PDF_URL).promise.then(pdf => {
-        pdfDoc = pdf;
-        document.getElementById('pdfTotalPages').innerText = pdf.numPages;
-        renderContinuousDocument();
-        setupTouchGestures();
-      }).catch(err => {
-        console.error("PDF Init Error:", err);
-        document.getElementById('pdfViewportContainer').innerHTML = `
-          <div class="text-rose-400 p-6 text-center text-xs space-y-2">
-            <p class="font-bold text-sm">Failed to load manual.</p>
-            <p>Ensure <code>Managing-Successful-Projects-With-PRINCE2-7.pdf</code> is in the root directory.</p>
+        // Add to Quiz Selector
+        const qOpt = document.createElement('option');
+        qOpt.value = sec.id;
+        qOpt.innerText = sec.title;
+        quizSelect.appendChild(qOpt);
+
+        // Render Directory Card
+        const card = document.createElement('div');
+        card.className = `p-4 rounded-2xl border transition shadow-sm flex flex-col justify-between ${isRead ? 'bg-emerald-50/40 border-emerald-200' : 'bg-white border-slate-200'}`;
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Page ${sec.page}[cite: 2]</span>
+              <button onclick="toggleSectionRead('${sec.id}')" class="text-xs font-bold ${isRead ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600'}">
+                <i class="${isRead ? 'fa-solid fa-circle-check text-emerald-600' : 'fa-regular fa-circle'} mr-1"></i> ${isRead ? 'Completed' : 'Mark Read'}
+              </button>
+            </div>
+            <h3 class="font-black text-sm text-slate-900 leading-snug">${sec.title}</h3>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${sec.desc}</p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2">
+            <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 text-center py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow">
+              <i class="fa-solid fa-book-open mr-1.5"></i> Read (p.${sec.page}) <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>[cite: 2]
+            </a>
+            <button onclick="startChapterQuiz('${sec.id}')" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs" title="Test Section">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
           </div>
         `;
+        grid.appendChild(card);
       });
     }
 
-    function renderContinuousDocument() {
-      const container = document.getElementById('pdfViewportContainer');
-      container.innerHTML = '';
-      renderedPages.clear();
-
-      for (let i = 1; i <= pdfDoc.numPages; i++) {
-        const pageWrapper = document.createElement('div');
-        pageWrapper.id = `pdf-page-wrapper-${i}`;
-        pageWrapper.dataset.pageNumber = i;
-        pageWrapper.className = 'pdf-page-box relative flex justify-center items-center bg-white shadow-xl rounded-md transition-transform duration-100';
-        pageWrapper.style.minHeight = '350px';
-        pageWrapper.style.width = '100%';
-        pageWrapper.style.maxWidth = `${Math.min(window.innerWidth - 20, 850) * pdfScale}px`;
-
-        const placeholder = document.createElement('div');
-        placeholder.className = 'text-slate-400 text-xs py-10';
-        placeholder.innerText = `Loading Page ${i}...`;
-        pageWrapper.appendChild(placeholder);
-
-        container.appendChild(pageWrapper);
-      }
-
-      container.onscroll = handleContainerScroll;
-      jumpToPage(currentVisiblePage);
-    }
-
-    function handleContainerScroll() {
-      const container = document.getElementById('pdfViewportContainer');
-      const wrappers = container.getElementsByClassName('pdf-page-box');
-      const containerTop = container.scrollTop;
-      const containerBottom = containerTop + container.clientHeight;
-
-      for (let wrapper of wrappers) {
-        const pageNum = parseInt(wrapper.dataset.pageNumber);
-        const top = wrapper.offsetTop - container.offsetTop;
-        const bottom = top + wrapper.clientHeight;
-
-        if (bottom >= containerTop - 400 && top <= containerBottom + 400) {
-          if (!renderedPages.has(pageNum)) {
-            renderIndividualPage(pageNum, wrapper);
-          }
-        }
-
-        if (top <= containerTop + 150 && bottom >= containerTop + 150) {
-          if (currentVisiblePage !== pageNum) {
-            currentVisiblePage = pageNum;
-            document.getElementById('pdfCurrentPage').innerText = pageNum;
-          }
-        }
-      }
-    }
-
-    function renderIndividualPage(pageNum, wrapper) {
-      renderedPages.add(pageNum);
-      pdfDoc.getPage(pageNum).then(page => {
-        const container = document.getElementById('pdfViewportContainer');
-        const availableWidth = Math.min(container.clientWidth - 24, 850);
-        const unscaledViewport = page.getViewport({ scale: 1 });
-        const computedScale = (availableWidth / unscaledViewport.width) * pdfScale;
-        const viewport = page.getViewport({ scale: Math.max(computedScale, 0.6) });
-
-        let canvas = wrapper.querySelector('canvas');
-        if (!canvas) {
-          wrapper.innerHTML = '';
-          canvas = document.createElement('canvas');
-          canvas.className = 'rounded-md shadow';
-          wrapper.appendChild(canvas);
-        }
-
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        wrapper.style.minHeight = `${viewport.height}px`;
-        wrapper.style.width = `${viewport.width}px`;
-
-        const renderContext = {
-          canvasContext: canvas.getContext('2d'),
-          viewport: viewport
-        };
-        page.render(renderContext);
-      });
-    }
-
-    function jumpToPage(num) {
-      if (!pdfDoc || num < 1 || num > pdfDoc.numPages) return;
-      currentVisiblePage = num;
-      document.getElementById('pdfCurrentPage').innerText = num;
-
-      const targetWrapper = document.getElementById(`pdf-page-wrapper-${num}`);
-      if (targetWrapper) {
-        targetWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        handleContainerScroll();
-      }
-    }
-
-    function scrollPage(delta) {
-      jumpToPage(currentVisiblePage + delta);
-    }
-
-    function zoomPdf(delta) {
-      pdfScale = Math.max(0.7, Math.min(2.4, pdfScale + delta));
-      renderedPages.clear();
-      handleContainerScroll();
-    }
-
-    function fitWidth() {
-      pdfScale = 1.0;
-      renderedPages.clear();
-      handleContainerScroll();
-    }
-
-    function toggleAppFullscreen() {
-      isFullscreenMode = !isFullscreenMode;
-      const master = document.getElementById('pdfMasterContainer');
-      const viewport = document.getElementById('pdfViewportContainer');
-      const btn = document.getElementById('btnFullscreen');
-
-      if (isFullscreenMode) {
-        master.classList.add('fixed', 'inset-0', 'z-50', 'rounded-none', 'w-screen', 'h-screen');
-        viewport.classList.remove('h-[70vh]');
-        viewport.classList.add('h-[calc(100vh-50px)]');
-        btn.innerHTML = '<i class="fa-solid fa-compress"></i> <span class="hidden sm:inline">Exit</span>';
-        document.body.style.overflow = 'hidden';
+    function toggleSectionRead(secId) {
+      if (appState.readSections[secId]) {
+        delete appState.readSections[secId];
       } else {
-        master.classList.remove('fixed', 'inset-0', 'z-50', 'rounded-none', 'w-screen', 'h-screen');
-        viewport.classList.add('h-[70vh]');
-        viewport.classList.remove('h-[calc(100vh-50px)]');
-        btn.innerHTML = '<i class="fa-solid fa-expand"></i> <span class="hidden sm:inline">Fullscreen</span>';
-        document.body.style.overflow = '';
+        appState.readSections[secId] = true;
       }
-      fitWidth();
+      saveAppState();
+      renderChapterCards();
     }
 
-    function setupTouchGestures() {
-      const container = document.getElementById('pdfViewportContainer');
-      container.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-          touchStartDistance = Math.hypot(
-            e.touches[0].pageX - e.touches[1].pageX,
-            e.touches[0].pageY - e.touches[1].pageY
-          );
-          initialScaleOnPinch = pdfScale;
-        }
-      }, { passive: true });
-
-      container.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2 && touchStartDistance > 0) {
-          const currentDistance = Math.hypot(
-            e.touches[0].pageX - e.touches[1].pageX,
-            e.touches[0].pageY - e.touches[1].pageY
-          );
-          const factor = currentDistance / touchStartDistance;
-          pdfScale = Math.max(0.7, Math.min(2.4, initialScaleOnPinch * factor));
-          renderedPages.clear();
-          handleContainerScroll();
-        }
-      }, { passive: true });
+    function startChapterQuiz(secId) {
+      switchTab('sectionquizzes');
+      loadQuizForSection(secId);
     }
 
     /* ==========================================================
-       5. NAVIGATION & DIRECTORY
+       5. NAVIGATION & TABS
     ========================================================== */
     function switchTab(tabId) {
       ['reader', 'dashboard', 'sectionquizzes', 'flashtests', 'foundation', 'flashcards', 'videos'].forEach(t => {
@@ -664,70 +491,6 @@
       curBtn.classList.remove('text-indigo-200');
 
       if (tabId === 'dashboard') renderDashboardAnalytics();
-      if (tabId === 'reader' && pdfDoc) handleContainerScroll();
-    }
-
-    function initReaderDirectory() {
-      const select = document.getElementById('chapterSelect');
-      const quizSelect = document.getElementById('quizSectionChooser');
-      select.innerHTML = '';
-      quizSelect.innerHTML = '';
-
-      bookSections.forEach(sec => {
-        const isRead = !!appState.readSections[sec.id];
-        const opt = document.createElement('option');
-        opt.value = sec.id;
-        opt.innerText = `${sec.title} (p.${sec.page}) ${isRead ? '✓' : ''}`;
-        select.appendChild(opt);
-
-        const qOpt = document.createElement('option');
-        qOpt.value = sec.id;
-        qOpt.innerText = sec.title;
-        quizSelect.appendChild(qOpt);
-      });
-
-      select.value = appState.currentSection;
-      quizSelect.value = appState.currentSection;
-      loadSectionInReader(appState.currentSection);
-    }
-
-    function onSelectChapter(secId) {
-      appState.currentSection = secId;
-      saveAppState();
-      loadSectionInReader(secId);
-    }
-
-    function loadSectionInReader(secId) {
-      const sec = bookSections.find(s => s.id === secId) || bookSections[0];
-      document.getElementById('currentSectionTitle').innerText = sec.title;
-      jumpToPage(sec.page);
-      updateReadButtonUI(sec.id);
-      updateGlobalMetricsUI();
-    }
-
-    function updateReadButtonUI(secId) {
-      const btn = document.getElementById('btnMarkRead');
-      const isRead = !!appState.readSections[secId];
-      if (isRead) {
-        btn.className = "px-3 py-1.5 text-xs font-bold rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-300";
-        btn.innerHTML = '<i class="fa-solid fa-square-check mr-1 text-emerald-600"></i> Read';
-      } else {
-        btn.className = "px-3 py-1.5 text-xs font-bold rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100";
-        btn.innerHTML = '<i class="fa-regular fa-square mr-1"></i> Mark Read';
-      }
-    }
-
-    function toggleCurrentReadStatus() {
-      const secId = appState.currentSection;
-      if (appState.readSections[secId]) delete appState.readSections[secId];
-      else appState.readSections[secId] = true;
-      saveAppState();
-      initReaderDirectory();
-    }
-
-    function jumpToCurrentQuiz() {
-      switchTab('sectionquizzes');
-      loadQuizForSection(appState.currentSection);
     }
 
     /* ==========================================================
@@ -1170,7 +933,7 @@
         appState.readSections = {};
         saveAppState();
         renderDashboardAnalytics();
-        initReaderDirectory();
+        renderChapterCards();
       }
     }
 
@@ -1178,10 +941,9 @@
        11. SERVICE WORKER REGISTRATION & INIT
     ========================================================== */
     window.addEventListener('DOMContentLoaded', () => {
-      initReaderDirectory();
+      renderChapterCards();
       renderActiveCard();
       updateGlobalMetricsUI();
-      initPdf();
 
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
