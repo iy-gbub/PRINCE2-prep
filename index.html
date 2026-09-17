@@ -75,7 +75,7 @@
           <span class="text-[10px] font-bold uppercase tracking-widest bg-indigo-500/40 text-indigo-200 px-2.5 py-0.5 rounded-full">Official 7th Edition Manual</span>
           <h2 class="text-lg sm:text-xl font-black mt-1">Managing Successful Projects with PRINCE2®</h2>
           <p class="text-xs text-slate-300 mt-0.5 max-w-lg">
-            Tap <strong>Read Chapter</strong> to jump straight to that exact page number in high resolution with full pinch-to-zoom and text scrolling[cite: 2].
+            Tap <strong>Read Chapter</strong> to jump straight to that exact page number in high resolution with full pinch-to-zoom and text scrolling.
           </p>
         </div>
         <div class="bg-white/10 border border-white/20 p-3 rounded-xl min-w-[160px] text-right">
@@ -273,28 +273,28 @@
   <!-- JAVASCRIPT APP ENGINE -->
   <script>
     /* ==========================================================
-       1. BOOK CONTENTS DIRECTORY (PAGE MAPPINGS)
+       1. BOOK CONTENTS DIRECTORY
     ========================================================== */
     const bookSections = [
-      { id: "ch1", title: "Chapter 1: Introduction", page: 20, desc: "Five integrated elements, project characteristics, and performance targets[cite: 2]." },
-      { id: "ch2", title: "Chapter 2: Principles", page: 38, desc: "The 7 non-negotiable principles underpinning all PRINCE2 projects[cite: 2]." },
-      { id: "ch3", title: "Chapter 3: People", page: 50, desc: "Leading change, communication approaches, and team psychological safety[cite: 2]." },
-      { id: "ch4", title: "Chapter 4: Intro to Practices", page: 68, desc: "How practices provide the specific treatment across the project lifecycle[cite: 2]." },
-      { id: "ch5", title: "Chapter 5: Business Case", page: 74, desc: "Outputs, outcomes, benefits, and continued investment justification[cite: 2]." },
-      { id: "ch6", title: "Chapter 6: Organizing", page: 92, desc: "Project Board roles, stakeholder interests, and organizational design[cite: 2]." },
-      { id: "ch7", title: "Chapter 7: Plans", page: 116, desc: "Product-based planning, stages, planning horizons, and schedules[cite: 2]." },
-      { id: "ch8", title: "Chapter 8: Quality", page: 146, desc: "User quality expectations, specifications, QA vs PA, and acceptance[cite: 2]." },
-      { id: "ch9", title: "Chapter 9: Risk", page: 166, desc: "Threats, opportunities, risk procedures, and tolerance thresholds[cite: 2]." },
-      { id: "ch10", title: "Chapter 10: Issues", page: 186, desc: "Issue types, change authority delegation, and change budgets[cite: 2]." },
-      { id: "ch11", title: "Chapter 11: Progress", page: 204, desc: "Manage by exception, tolerance monitoring, and exception reports[cite: 2]." },
-      { id: "ch12", title: "Chapter 12: Intro to Processes", page: 232, desc: "The 4 management layers and the complete project lifecycle model[cite: 2]." },
-      { id: "ch13", title: "Chapter 13: Starting Up (SU)", page: 238, desc: "Pre-project activities, project brief, mandate, and initiation plan[cite: 2]." },
-      { id: "ch14", title: "Chapter 14: Directing (DP)", page: 248, desc: "Project Board governance, stage authorizations, and ad-hoc direction[cite: 2]." },
-      { id: "ch15", title: "Chapter 15: Initiating (IP)", page: 258, desc: "Assembling the PID, management approaches, and detailed project plan[cite: 2]." },
-      { id: "ch16", title: "Chapter 16: Controlling a Stage (CS)", page: 270, desc: "Day-to-day PM work packages, issue monitoring, and progress checks[cite: 2]." },
-      { id: "ch17", title: "Chapter 17: Managing Product Delivery (MP)", page: 280, desc: "Team Manager acceptance, execution, and handover of work packages[cite: 2]." },
-      { id: "ch18", title: "Chapter 18: Stage Boundary (SB)", page: 288, desc: "End stage reviews, next stage planning, and updating the Business Case[cite: 2]." },
-      { id: "ch19", title: "Chapter 19: Closing (CP)", page: 296, desc: "Decommissioning, project evaluations, and post-project handover[cite: 2]." }
+      { id: "ch1", title: "Chapter 1: Introduction", page: 20, desc: "Five integrated elements, project characteristics, and performance targets." },
+      { id: "ch2", title: "Chapter 2: Principles", page: 38, desc: "The 7 non-negotiable principles underpinning all PRINCE2 projects." },
+      { id: "ch3", title: "Chapter 3: People", page: 50, desc: "Leading change, communication approaches, and team psychological safety." },
+      { id: "ch4", title: "Chapter 4: Intro to Practices", page: 68, desc: "How practices provide the specific treatment across the project lifecycle." },
+      { id: "ch5", title: "Chapter 5: Business Case", page: 74, desc: "Outputs, outcomes, benefits, and continued investment justification." },
+      { id: "ch6", title: "Chapter 6: Organizing", page: 92, desc: "Project Board roles, stakeholder interests, and organizational design." },
+      { id: "ch7", title: "Chapter 7: Plans", page: 116, desc: "Product-based planning, stages, planning horizons, and schedules." },
+      { id: "ch8", title: "Chapter 8: Quality", page: 146, desc: "User quality expectations, specifications, QA vs PA, and acceptance." },
+      { id: "ch9", title: "Chapter 9: Risk", page: 166, desc: "Threats, opportunities, risk procedures, and tolerance thresholds." },
+      { id: "ch10", title: "Chapter 10: Issues", page: 186, desc: "Issue types, change authority delegation, and change budgets." },
+      { id: "ch11", title: "Chapter 11: Progress", page: 204, desc: "Manage by exception, tolerance monitoring, and exception reports." },
+      { id: "ch12", title: "Chapter 12: Intro to Processes", page: 232, desc: "The 4 management layers and the complete project lifecycle model." },
+      { id: "ch13", title: "Chapter 13: Starting Up (SU)", page: 238, desc: "Pre-project activities, project brief, mandate, and initiation plan." },
+      { id: "ch14", title: "Chapter 14: Directing (DP)", page: 248, desc: "Project Board governance, stage authorizations, and ad-hoc direction." },
+      { id: "ch15", title: "Chapter 15: Initiating (IP)", page: 258, desc: "Assembling the PID, management approaches, and detailed project plan." },
+      { id: "ch16", title: "Chapter 16: Controlling a Stage (CS)", page: 270, desc: "Day-to-day PM work packages, issue monitoring, and progress checks." },
+      { id: "ch17", title: "Chapter 17: Managing Product Delivery (MP)", page: 280, desc: "Team Manager acceptance, execution, and handover of work packages." },
+      { id: "ch18", title: "Chapter 18: Stage Boundary (SB)", page: 288, desc: "End stage reviews, next stage planning, and updating the Business Case." },
+      { id: "ch19", title: "Chapter 19: Closing (CP)", page: 296, desc: "Decommissioning, project evaluations, and post-project handover." }
     ];
 
     /* ==========================================================
@@ -302,64 +302,64 @@
     ========================================================== */
     const sectionQuestions = {
       "ch1": [
-        { q: "Which of the following is NOT one of the 5 integrated elements of PRINCE2?", options: ["Principles", "Practices", "People", "Commercial Procurement"], a: 3, ref: "Section 1.2: The five elements are Principles, People, Practices, Processes, and Project Context[cite: 2]." },
-        { q: "How does PRINCE2 define a project?", options: ["A temporary organization created for delivering business products according to an agreed business case", "Continuous business operations and functional upkeep", "A series of ad-hoc tickets managed by a Scrum Master", "A legally binding outsourced supplier relationship"], a: 0, ref: "Section 1.3: Definition of a Project[cite: 2]." }
+        { q: "Which of the following is NOT one of the 5 integrated elements of PRINCE2?", options: ["Principles", "Practices", "People", "Commercial Procurement"], a: 3, ref: "Section 1.2: The five elements are Principles, People, Practices, Processes, and Project Context." },
+        { q: "How does PRINCE2 define a project?", options: ["A temporary organization created for delivering business products according to an agreed business case", "Continuous business operations and functional upkeep", "A series of ad-hoc tickets managed by a Scrum Master", "A legally binding outsourced supplier relationship"], a: 0, ref: "Section 1.3: Definition of a Project." }
       ],
       "ch2": [
-        { q: "What are the 7 performance targets managed using tolerances in PRINCE2 7?", options: ["Benefits, Costs, Time, Quality, Scope, Sustainability, and Risk", "Budget, Revenue, Resources, Safety, Governance, Time, Scope", "Hours, Milestones, Budget, Team, Plans, Tolerances, Risk", "Capital, Operating Expense, Timeline, ESG, Quality, Board, Scope"], a: 0, ref: "Section 2.4: Limits of delegated authority cover 7 performance aspects[cite: 2]." },
-        { q: "What is the minimum number of stages permitted in any PRINCE2 project?", options: ["At least two stages: initiation and one delivery stage", "Only one delivery stage", "Three stages: Initiation, Build, Handover", "Four stages"], a: 0, ref: "Section 2.5: Manage by stages mandates an initiation stage and at least one further stage[cite: 2]." }
+        { q: "What are the 7 performance targets managed using tolerances in PRINCE2 7?", options: ["Benefits, Costs, Time, Quality, Scope, Sustainability, and Risk", "Budget, Revenue, Resources, Safety, Governance, Time, Scope", "Hours, Milestones, Budget, Team, Plans, Tolerances, Risk", "Capital, Operating Expense, Timeline, ESG, Quality, Board, Scope"], a: 0, ref: "Section 2.4: Limits of delegated authority cover 7 performance aspects." },
+        { q: "What is the minimum number of stages permitted in any PRINCE2 project?", options: ["At least two stages: initiation and one delivery stage", "Only one delivery stage", "Three stages: Initiation, Build, Handover", "Four stages"], a: 0, ref: "Section 2.5: Manage by stages mandates an initiation stage and at least one further stage." }
       ],
       "ch3": [
-        { q: "Under the PRINCE2 7 'People' element, who creates psychological safety?", options: ["All team members through their day-to-day interactions", "Only the Project Executive", "The HR Director only", "External Project Assurance only"], a: 0, ref: "Section 3.3.2: Psychological safety is fostered collectively through daily interactions[cite: 2]." }
+        { q: "Under the PRINCE2 7 'People' element, who creates psychological safety?", options: ["All team members through their day-to-day interactions", "Only the Project Executive", "The HR Director only", "External Project Assurance only"], a: 0, ref: "Section 3.3.2: Psychological safety is fostered collectively through daily interactions." }
       ],
       "ch4": [
-        { q: "What is a PRINCE2 Practice?", options: ["An aspect of project management that must be applied consistently throughout the project lifecycle", "An optional Agile backlog template", "A post-project audit checklist", "A commercial invoice standard"], a: 0, ref: "Section 4.1: Definition of Practice[cite: 2]." }
+        { q: "What is a PRINCE2 Practice?", options: ["An aspect of project management that must be applied consistently throughout the project lifecycle", "An optional Agile backlog template", "A post-project audit checklist", "A commercial invoice standard"], a: 0, ref: "Section 4.1: Definition of Practice." }
       ],
       "ch5": [
-        { q: "Who is single-point accountable for the Business Case throughout the project lifecycle?", options: ["The Project Executive", "The Project Manager", "The Senior Supplier", "The Team Manager"], a: 0, ref: "Section 5.6 & 6.2.4.1: The Executive owns the Business Case and secures funding[cite: 2]." },
-        { q: "In PRINCE2, an 'Outcome' is defined as:", options: ["The result of change, normally affecting real-world behaviour and circumstances", "The physical deliverable produced by an activity", "The net profit realized after three years", "A tolerance exception report"], a: 0, ref: "Section 5.1: Outputs enable outcomes, which allow benefits to be realized[cite: 2]." }
+        { q: "Who is single-point accountable for the Business Case throughout the project lifecycle?", options: ["The Project Executive", "The Project Manager", "The Senior Supplier", "The Team Manager"], a: 0, ref: "Section 5.6 & 6.2.4.1: The Executive owns the Business Case and secures funding." },
+        { q: "In PRINCE2, an 'Outcome' is defined as:", options: ["The result of change, normally affecting real-world behaviour and circumstances", "The physical deliverable produced by an activity", "The net profit realized after three years", "A tolerance exception report"], a: 0, ref: "Section 5.1: Outputs enable outcomes, which allow benefits to be realized." }
       ],
       "ch6": [
-        { q: "Which two roles CANNOT be combined under any circumstances?", options: ["Project Executive and Project Manager", "Project Executive and Senior User", "Project Manager and Team Manager", "Project Manager and Project Support"], a: 0, ref: "Section 6.2.4.1: The single focus of the PM must remain separate from the Executive[cite: 2]." }
+        { q: "Which two roles CANNOT be combined under any circumstances?", options: ["Project Executive and Project Manager", "Project Executive and Senior User", "Project Manager and Team Manager", "Project Manager and Project Support"], a: 0, ref: "Section 6.2.4.1: The single focus of the PM must remain separate from the Executive." }
       ],
       "ch7": [
-        { q: "What is the first step in the PRINCE2 product-based planning technique?", options: ["Write the Project Product Description", "Draw a Gantt chart", "Draft the project budget", "Allocate work packages to suppliers"], a: 0, ref: "Section 7.3.2: Planning starts with defining and analysing products[cite: 2]." }
+        { q: "What is the first step in the PRINCE2 product-based planning technique?", options: ["Write the Project Product Description", "Draw a Gantt chart", "Draft the project budget", "Allocate work packages to suppliers"], a: 0, ref: "Section 7.3.2: Planning starts with defining and analysing products." }
       ],
       "ch8": [
-        { q: "How does Quality Assurance differ from Project Assurance?", options: ["Quality Assurance is independent of the project team and business-owned; Project Assurance is board-owned", "They are identical terms", "The Project Manager performs Quality Assurance", "Project Assurance only reviews code quality"], a: 0, ref: "Section 8.2.3: QA is independent of the project management team[cite: 2]." }
+        { q: "How does Quality Assurance differ from Project Assurance?", options: ["Quality Assurance is independent of the project team and business-owned; Project Assurance is board-owned", "They are identical terms", "The Project Manager performs Quality Assurance", "Project Assurance only reviews code quality"], a: 0, ref: "Section 8.2.3: QA is independent of the project management team." }
       ],
       "ch9": [
-        { q: "In PRINCE2, a risk with a positive impact on objectives is termed an:", options: ["Opportunity", "Windfall", "Upside benefit", "Asset"], a: 0, ref: "Section 9.1: PRINCE2 uses 'threat' for negative risks and 'opportunity' for positive risks[cite: 2]." }
+        { q: "In PRINCE2, a risk with a positive impact on objectives is termed an:", options: ["Opportunity", "Windfall", "Upside benefit", "Asset"], a: 0, ref: "Section 9.1: PRINCE2 uses 'threat' for negative risks and 'opportunity' for positive risks." }
       ],
       "ch10": [
-        { q: "Why would a Project Board choose to appoint a Change Authority?", options: ["To relieve board overhead and expedite change decisions on large projects", "To dismiss the Project Manager", "To remove stage tolerances", "To draft the project mandate"], a: 0, ref: "Section 6.4.5: Change Authority delegates decision-making to the appropriate operational level[cite: 2]." }
+        { q: "Why would a Project Board choose to appoint a Change Authority?", options: ["To relieve board overhead and expedite change decisions on large projects", "To dismiss the Project Manager", "To remove stage tolerances", "To draft the project mandate"], a: 0, ref: "Section 6.4.5: Change Authority delegates decision-making to the appropriate operational level." }
       ],
       "ch11": [
-        { q: "When must the Project Manager produce and submit an Exception Report?", options: ["Immediately when a stage or project tolerance is forecast to be exceeded", "At the regular monthly board review", "Only after a stage plan runs completely out of money", "Never; the Board monitors this automatically"], a: 0, ref: "Section 2.4 & Chapter 11: Manage by Exception requires immediate escalation upon forecast breach[cite: 2]." }
+        { q: "When must the Project Manager produce and submit an Exception Report?", options: ["Immediately when a stage or project tolerance is forecast to be exceeded", "At the regular monthly board review", "Only after a stage plan runs completely out of money", "Never; the Board monitors this automatically"], a: 0, ref: "Section 2.4 & Chapter 11: Manage by Exception requires immediate escalation upon forecast breach." }
       ],
       "ch12": [
-        { q: "Which management layer carries out the 'Directing a Project' process?", options: ["The Project Board", "The Project Manager", "The Team Managers", "Corporate Commissioning only"], a: 0, ref: "Section 12.2: Directing a Project is owned by the Project Board[cite: 2]." }
+        { q: "Which management layer carries out the 'Directing a Project' process?", options: ["The Project Board", "The Project Manager", "The Team Managers", "Corporate Commissioning only"], a: 0, ref: "Section 12.2: Directing a Project is owned by the Project Board." }
       ],
       "ch13": [
-        { q: "What document triggers the 'Starting Up a Project' process?", options: ["Project Mandate", "PID", "End Stage Report", "Exception Plan"], a: 0, ref: "Section 13.3: The project mandate from the business activates starting up a project[cite: 2]." }
+        { q: "What document triggers the 'Starting Up a Project' process?", options: ["Project Mandate", "PID", "End Stage Report", "Exception Plan"], a: 0, ref: "Section 13.3: The project mandate from the business activates starting up a project." }
       ],
       "ch14": [
-        { q: "The 'Directing a Project' process runs:", options: ["Continuously from project start-up authorization until project closure", "Only during the initiation stage", "Only when an exception report is submitted", "Exclusively after project closure"], a: 0, ref: "Chapter 14: Directing a Project covers the whole lifecycle of the project[cite: 2]." }
+        { q: "The 'Directing a Project' process runs:", options: ["Continuously from project start-up authorization until project closure", "Only during the initiation stage", "Only when an exception report is submitted", "Exclusively after project closure"], a: 0, ref: "Chapter 14: Directing a Project covers the whole lifecycle of the project." }
       ],
       "ch15": [
-        { q: "What management product is assembled during 'Initiating a Project' to serve as the baseline contract?", options: ["Project Initiation Documentation (PID)", "Work Package Description", "Highlight Report", "Daily Log"], a: 0, ref: "Chapter 15 & Section 4.3.1: The PID forms the baseline contract[cite: 2]." }
+        { q: "What management product is assembled during 'Initiating a Project' to serve as the baseline contract?", options: ["Project Initiation Documentation (PID)", "Work Package Description", "Highlight Report", "Daily Log"], a: 0, ref: "Chapter 15 & Section 4.3.1: The PID forms the baseline contract." }
       ],
       "ch16": [
-        { q: "Who carries out day-to-day work in the 'Controlling a Stage' process?", options: ["The Project Manager", "The Senior Supplier", "The Project Executive", "The Team Manager"], a: 0, ref: "Chapter 16: Controlling a Stage is the Project Manager's core execution process[cite: 2]." }
+        { q: "Who carries out day-to-day work in the 'Controlling a Stage' process?", options: ["The Project Manager", "The Senior Supplier", "The Project Executive", "The Team Manager"], a: 0, ref: "Chapter 16: Controlling a Stage is the Project Manager's core execution process." }
       ],
       "ch17": [
-        { q: "What product formally authorizes work from the Project Manager to a Team Manager?", options: ["Work Package Description", "Stage Plan", "Project Product Description", "Lessons Log"], a: 0, ref: "Chapter 17 & Section 7.5: Work Packages authorize and govern product delivery[cite: 2]." }
+        { q: "What product formally authorizes work from the Project Manager to a Team Manager?", options: ["Work Package Description", "Stage Plan", "Project Product Description", "Lessons Log"], a: 0, ref: "Chapter 17 & Section 7.5: Work Packages authorize and govern product delivery." }
       ],
       "ch18": [
-        { q: "In 'Managing a Stage Boundary', what does the PM prepare to seek approval for the next stage?", options: ["End Stage Report and next Stage Plan", "Project Mandate", "Work Package", "Exception Report"], a: 0, ref: "Chapter 18: Stage Boundary reviews the current stage and plans the next[cite: 2]." }
+        { q: "In 'Managing a Stage Boundary', what does the PM prepare to seek approval for the next stage?", options: ["End Stage Report and next Stage Plan", "Project Mandate", "Work Package", "Exception Report"], a: 0, ref: "Chapter 18: Stage Boundary reviews the current stage and plans the next." }
       ],
       "ch19": [
-        { q: "At project closure, post-project benefits realization tracking transfers to:", options: ["The Business Layer / Senior User", "The Project Manager", "The Supplier's Scrum Master", "The Decommissioning contractor"], a: 0, ref: "Section 5.6 & Chapter 19: Post-project accountability rests with the business/senior user[cite: 2]." }
+        { q: "At project closure, post-project benefits realization tracking transfers to:", options: ["The Business Layer / Senior User", "The Project Manager", "The Supplier's Scrum Master", "The Decommissioning contractor"], a: 0, ref: "Section 5.6 & Chapter 19: Post-project accountability rests with the business/senior user." }
       ]
     };
 
@@ -378,14 +378,14 @@
     });
 
     const activeRecallCards = [
-      { tag: "Principle", front: "Manage by Exception", back: "<b>7 Tolerances:</b> Benefits, Cost, Time, Quality, Scope, Sustainability, Risk.<br/><br/>If a breach is forecast, the PM escalates immediately with an <b>Exception Report</b>[cite: 2]." },
-      { tag: "Role", front: "The Project Executive", back: "Single point of accountability. Represents Business, secures funds, and owns the Business Case. Cannot be combined with the Project Manager role[cite: 2]." },
-      { tag: "Role", front: "The Senior User", back: "Represents users. Defines specifications, acceptance criteria, and is accountable for post-project benefits realization[cite: 2]." },
-      { tag: "Management Product", front: "Project Initiation Documentation (PID)", back: "The 'contract' between PM and Board. Contains project plan, business case, approaches, controls, and tailoring[cite: 2]." },
-      { tag: "Quality Practice", front: "PA vs QA", back: "<b>Project Assurance:</b> Board-owned, verifies PM performance.<br/><b>Quality Assurance:</b> Independent, business-owned, verifies corporate compliance[cite: 2]." },
-      { tag: "Plans Practice", front: "Product Breakdown Structure (PBS)", back: "A hierarchy of required products before activities are scheduled. Drives the Product Flow Diagram and WBS[cite: 2]." },
-      { tag: "Progress Practice", front: "Exception Plan", back: "Replaces the current Stage Plan (or Project Plan) when a tolerance exception occurs, approved by the Project Board[cite: 2]." },
-      { tag: "Principle", front: "Tailor to Suit", back: "Mandatory tailoring to scale, complexity, risk, and delivery methods while upholding all 7 principles[cite: 2]." }
+      { tag: "Principle", front: "Manage by Exception", back: "<b>7 Tolerances:</b> Benefits, Cost, Time, Quality, Scope, Sustainability, Risk.<br/><br/>If a breach is forecast, the PM escalates immediately with an <b>Exception Report</b>." },
+      { tag: "Role", front: "The Project Executive", back: "Single point of accountability. Represents Business, secures funds, and owns the Business Case. Cannot be combined with the Project Manager role." },
+      { tag: "Role", front: "The Senior User", back: "Represents users. Defines specifications, acceptance criteria, and is accountable for post-project benefits realization." },
+      { tag: "Management Product", front: "Project Initiation Documentation (PID)", back: "The 'contract' between PM and Board. Contains project plan, business case, approaches, controls, and tailoring." },
+      { tag: "Quality Practice", front: "PA vs QA", back: "<b>Project Assurance:</b> Board-owned, verifies PM performance.<br/><b>Quality Assurance:</b> Independent, business-owned, verifies corporate compliance." },
+      { tag: "Plans Practice", front: "Product Breakdown Structure (PBS)", back: "A hierarchy of required products before activities are scheduled. Drives the Product Flow Diagram and WBS." },
+      { tag: "Progress Practice", front: "Exception Plan", back: "Replaces the current Stage Plan (or Project Plan) when a tolerance exception occurs, approved by the Project Board." },
+      { tag: "Principle", front: "Tailor to Suit", back: "Mandatory tailoring to scale, complexity, risk, and delivery methods while upholding all 7 principles." }
     ];
 
     /* ==========================================================
@@ -404,14 +404,11 @@
     }
 
     /* ==========================================================
-       4. PRECISE JUMP LINK GENERATOR (PDF.JS CLOUD ENGINE)
+       4. PRECISE JUMP LINK GENERATOR
     ========================================================== */
     function getChapterPdfUrl(pageNum) {
-      // Constructs an absolute URL for the PDF from current domain/repo path
       const currentLoc = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
       const fullPdfUrl = currentLoc + 'Managing-Successful-Projects-With-PRINCE2-7.pdf';
-      
-      // Routes through Mozilla's hosted viewer which enforces #page=N across mobile and desktop
       return `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(fullPdfUrl)}#page=${pageNum}`;
     }
 
@@ -437,7 +434,7 @@
         card.innerHTML = `
           <div>
             <div class="flex justify-between items-center mb-1.5">
-              <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Page ${sec.page}[cite: 2]</span>
+              <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Page ${sec.page}</span>
               <button onclick="toggleSectionRead('${sec.id}')" class="text-xs font-bold ${isRead ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600'}">
                 <i class="${isRead ? 'fa-solid fa-circle-check text-emerald-600' : 'fa-regular fa-circle'} mr-1"></i> ${isRead ? 'Completed' : 'Mark Read'}
               </button>
@@ -448,7 +445,7 @@
 
           <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2">
             <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 text-center py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow">
-              <i class="fa-solid fa-book-open mr-1.5"></i> Read (p.${sec.page}) <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>[cite: 2]
+              <i class="fa-solid fa-book-open mr-1.5"></i> Read (p.${sec.page}) <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
             </a>
             <button onclick="startChapterQuiz('${sec.id}')" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs" title="Test Section">
               <i class="fa-solid fa-pencil"></i>
