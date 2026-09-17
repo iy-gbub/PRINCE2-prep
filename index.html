@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>PRINCE2® 7 MasterPrep: Interactive Reader & Testing Suite</title>
+
+  <!-- PWA Manifest Link -->
+  <link rel="manifest" href="./manifest.json" />
+
+  <!-- Mobile Browser Styling & Apple Support -->
+  <meta name="theme-color" content="#1e1b4b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3281/3281329.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- TOP APP BAR -->
+  <header class="bg-indigo-950 text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-indigo-600 p-2 rounded-xl text-white font-black text-xl tracking-wider shadow">P2</div>
+        <div>
+          <h1 class="font-bold text-base sm:text-lg leading-tight">PRINCE2® 7 MasterPrep</h1>
+          <p class="text-[11px] text-indigo-300">Book Study Companion & Diagnostic Exam Suite</p>
+        </div>
+      </div>
+
+      <!-- Live Reading & Performance Status -->
+      <div class="flex items-center gap-4 text-xs sm:text-sm">
+        <div class="flex items-center gap-2 bg-indigo-900/60 border border-indigo-700 px-3 py-1.5 rounded-xl">
+          <i class="fa-solid fa-book-bookmark text-emerald-400"></i>
+          <span>Book Read: <strong id="headerBookProgress">0%</strong></span>
+        </div>
+        <div class="hidden sm:flex items-center gap-2 bg-indigo-900/60 border border-indigo-700 px-3 py-1.5 rounded-xl">
+          <i class="fa-solid fa-chart-line text-amber-400"></i>
+          <span>Test Avg: <strong id="headerTestAvg">0%</strong></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APP SHELL -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1 flex flex-col md:flex-row gap-6">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-full md:w-64 shrink-0">
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-col gap-1 sticky top-24">
+        <span class="text-[11px] font-bold uppercase text-slate-400 px-3 mb-2 tracking-wider">Navigation</span>
+        
+        <button onclick="switchTab('reader')" id="nav-reader" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-indigo-700 bg-indigo-50 transition">
+          <i class="fa-solid fa-book-open-reader w-5"></i> Book & Sections
+        </button>
+
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-chart-pie w-5"></i> Progress & Analytics
+        </button>
+
+        <button onclick="switchTab('sectionquizzes')" id="nav-sectionquizzes" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-circle-question w-5"></i> Section Tests
+        </button>
+
+        <button onclick="switchTab('flashtests')" id="nav-flashtests" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-stopwatch-20 w-5"></i> Timed Flash Drills
+        </button>
+
+        <button onclick="switchTab('foundation')" id="nav-foundation" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-clock w-5"></i> 60m Mock Exam
+        </button>
+
+        <button onclick="switchTab('flashcards')" id="nav-flashcards" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-brain w-5"></i> Active Recall Deck
+        </button>
+
+        <button onclick="switchTab('videos')" id="nav-videos" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-100 transition">
+          <i class="fa-solid fa-video w-5"></i> 7 Principles Videos
+        </button>
+
+        <hr class="my-3 border-slate-100" />
+
+        <div class="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3 text-[11px] text-indigo-900 leading-relaxed">
+          <span class="font-bold block mb-1 text-indigo-800"><i class="fa-solid fa-circle-info mr-1"></i> PDF Integration</span>
+          Click any section to immediately jump the reader to that exact chapter page in the official manual.
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT SCREENS -->
+    <main class="flex-1 min-w-0">
+
+      <!-- ================= 1. INTEGRATED PDF READER & SECTION DIRECTORY ================= -->
+      <section id="panel-reader" class="space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-4">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Official Manual Companion</span>
+              <h2 class="text-xl font-black text-slate-800" id="currentSectionTitle">Chapter 1: Introduction</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Managing Successful Projects with PRINCE2® 7th Edition</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button onclick="toggleCurrentReadStatus()" id="btnMarkRead" class="px-3.5 py-2 text-xs font-bold rounded-xl transition border border-slate-300 text-slate-700 hover:bg-slate-100">
+                <i class="fa-regular fa-square-check mr-1.5"></i> Mark Section as Read
+              </button>
+              <button onclick="jumpToCurrentQuiz()" class="px-3.5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow">
+                <i class="fa-solid fa-pencil mr-1.5"></i> Test Your Knowledge
+              </button>
+            </div>
+          </div>
+
+          <!-- Chapter Navigation Dropdown & Progress Bar -->
+          <div class="space-y-3 mb-4">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <div class="flex-1">
+                <label for="chapterSelect" class="text-[11px] font-bold uppercase text-slate-400 block mb-1">Jump to Section</label>
+                <select id="chapterSelect" onchange="onSelectChapter(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold text-slate-700 focus:outline-indigo-500">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+              <div class="sm:w-64">
+                <div class="flex justify-between text-[11px] font-bold text-slate-400 mb-1">
+                  <span>Reading Tracker</span>
+                  <span id="readingStatsText">0 of 19 Read</span>
+                </div>
+                <div class="w-full bg-slate-100 h-9 rounded-xl p-1.5 flex items-center border border-slate-200">
+                  <div id="readingProgressFill" class="bg-emerald-500 h-full rounded-lg transition-all" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Embedded PDF Viewer -->
+          <div class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-900 shadow-inner">
+            <div class="p-2 bg-slate-800 text-slate-300 text-xs flex justify-between items-center px-4">
+              <span id="pdfStatusNote"><i class="fa-regular fa-file-pdf mr-1.5 text-rose-400"></i> Viewing embedded source PDF</span>
+              <a id="pdfDirectLink" href="Managing-Successful-Projects-With-PRINCE2-7.pdf" target="_blank" class="text-[11px] text-indigo-300 hover:text-white underline">
+                Open in new window <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+              </a>
+            </div>
+            <iframe id="pdfEmbedFrame" src="Managing-Successful-Projects-With-PRINCE2-7.pdf#page=20" class="w-full h-[650px] border-none">
+              <p class="p-6 text-white text-center text-sm">
+                Your browser does not support inline iframes. Please download or open 
+                <a href="Managing-Successful-Projects-With-PRINCE2-7.pdf" class="underline text-indigo-400">Managing-Successful-Projects-With-PRINCE2-7.pdf</a> directly.
+              </p>
+            </iframe>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 2. DASHBOARD & TREND ANALYSIS ================= -->
+      <section id="panel-dashboard" class="hidden space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-900 rounded-3xl p-6 sm:p-8 text-white shadow relative overflow-hidden">
+          <div class="relative z-10 max-w-xl">
+            <span class="bg-indigo-500/40 text-indigo-200 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+              PRINCE2® 7th Edition Diagnostic Engine
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black mt-3 leading-tight">Mastery & Trend Diagnostics</h2>
+            <p class="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
+              Track your reading progress and quiz performance chapter by chapter. Target weak areas before booking your official PeopleCert examination.
+            </p>
+          </div>
+          <div class="absolute -right-8 -bottom-10 opacity-10 text-white text-9xl font-black select-none pointer-events-none">
+            7th
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="text-[11px] font-bold text-slate-400 uppercase">Chapters Finished</div>
+            <div class="mt-2 text-2xl font-black text-slate-800" id="dashChaptersRead">0 / 19</div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="text-[11px] font-bold text-slate-400 uppercase">Global Test Avg</div>
+            <div class="mt-2 text-2xl font-black text-indigo-600" id="dashGlobalAccuracy">0%</div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="text-[11px] font-bold text-slate-400 uppercase">Tests Completed</div>
+            <div class="mt-2 text-2xl font-black text-emerald-600" id="dashTotalTests">0</div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="text-[11px] font-bold text-slate-400 uppercase">Lowest Chapter Score</div>
+            <div class="mt-2 text-sm font-bold text-rose-600 truncate" id="dashWeakSection">None Yet</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-sm text-slate-800 mb-1">Score History (Mock & Flash Drills)</h3>
+            <p class="text-xs text-slate-400 mb-4">Passing benchmark: 60% (PeopleCert Foundation Standard)</p>
+            <div class="h-64 w-full">
+              <canvas id="scoreTrendChart"></canvas>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-sm text-slate-800 mb-1">Chapter Mastery Breakdown</h3>
+              <p class="text-xs text-slate-400 mb-3">Scores based on chapter knowledge checks</p>
+              <div id="sectionBreakdownList" class="space-y-2.5 text-xs max-h-56 overflow-y-auto scrollbar-thin pr-1">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+            <button onclick="clearHistory()" class="mt-4 w-full py-2 text-[11px] text-slate-400 hover:text-rose-600 border border-dashed border-slate-200 rounded-xl transition">
+              <i class="fa-solid fa-trash-can mr-1"></i> Reset Test Analytics History
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. SECTION-BY-SECTION KNOWLEDGE TESTS ================= -->
+      <section id="panel-sectionquizzes" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-5">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Chapter Mastery Quiz</span>
+              <h2 class="text-xl font-black text-slate-800" id="quizHeaderTitle">Test Your Knowledge</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Direct questions derived from this chapter's key themes and syllabus notes</p>
+            </div>
+            <div>
+              <select id="quizSectionChooser" onchange="loadQuizForSection(this.value)" class="bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-bold text-slate-700">
+                <!-- Injected dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Active Quiz Screen -->
+          <div id="sectionQuizActiveContainer" class="space-y-6">
+            <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+              <span id="sqProgressText">Question 1 of 3</span>
+              <span id="sqCategoryTag" class="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md font-bold"></span>
+            </div>
+
+            <h3 id="sqQuestionTitle" class="text-base sm:text-lg font-bold text-slate-800 leading-snug"></h3>
+            <div id="sqOptionsContainer" class="space-y-3"></div>
+
+            <div id="sqFeedbackBox" class="hidden p-4 rounded-xl text-xs leading-relaxed border"></div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+              <button id="sqPrevBtn" onclick="prevSQ()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 disabled:opacity-40" disabled>
+                Previous
+              </button>
+              <button id="sqNextBtn" onclick="nextSQ()" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow">
+                Next Question
+              </button>
+            </div>
+          </div>
+
+          <!-- Completed Screen -->
+          <div id="sectionQuizScoreCard" class="hidden text-center py-10 space-y-4">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black" id="sqResultIcon"></div>
+            <h3 class="text-2xl font-black text-slate-800" id="sqResultTitle">Section Complete!</h3>
+            <p id="sqResultScoreText" class="text-xs text-slate-500 max-w-sm mx-auto"></p>
+            <div class="pt-4 flex justify-center gap-3">
+              <button onclick="retakeCurrentSQ()" class="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 shadow">
+                Retake Quiz
+              </button>
+              <button onclick="switchTab('reader')" class="px-5 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-200">
+                Back to Book
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 4. TIMED FLASH TESTS (5, 10, 15 Mins) ================= -->
+      <section id="panel-flashtests" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          
+          <div id="flashSetupScreen" class="space-y-6">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Rapid Retrieval Practice</span>
+              <h2 class="text-xl font-black text-slate-800">Configure Timed Flash Test</h2>
+              <p class="text-xs text-slate-500 mt-1">Select your question pool and pacing limit. Exactly 1 minute per question.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+              <button onclick="startFlashTest(5)" class="p-5 rounded-2xl border-2 border-indigo-100 hover:border-indigo-600 hover:bg-indigo-50/50 transition text-left group">
+                <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-black mb-3 group-hover:scale-105 transition">5Q</div>
+                <div class="font-bold text-slate-800 text-sm">Sprint Quiz</div>
+                <div class="text-xs text-slate-500 mt-0.5">5 Questions • 5 Mins</div>
+              </button>
+
+              <button onclick="startFlashTest(10)" class="p-5 rounded-2xl border-2 border-purple-100 hover:border-purple-600 hover:bg-purple-50/50 transition text-left group">
+                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-black mb-3 group-hover:scale-105 transition">10Q</div>
+                <div class="font-bold text-slate-800 text-sm">Standard Drill</div>
+                <div class="text-xs text-slate-500 mt-0.5">10 Questions • 10 Mins</div>
+              </button>
+
+              <button onclick="startFlashTest(15)" class="p-5 rounded-2xl border-2 border-emerald-100 hover:border-emerald-600 hover:bg-emerald-50/50 transition text-left group">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-black mb-3 group-hover:scale-105 transition">15Q</div>
+                <div class="font-bold text-slate-800 text-sm">Endurance Drill</div>
+                <div class="text-xs text-slate-500 mt-0.5">15 Questions • 15 Mins</div>
+              </button>
+            </div>
+          </div>
+
+          <div id="flashActiveScreen" class="hidden space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <span class="text-xs font-bold text-indigo-600" id="flashProgressText">Question 1 of 5</span>
+                <span id="flashCategoryBadge" class="ml-2 text-[10px] font-extrabold uppercase px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md"></span>
+              </div>
+              <div class="flex items-center gap-2 font-mono font-bold text-sm px-3 py-1 rounded-xl bg-amber-50 text-amber-800 border border-amber-200">
+                <i class="fa-regular fa-clock"></i>
+                <span id="flashTimer">05:00</span>
+              </div>
+            </div>
+
+            <div>
+              <h3 id="flashQuestionTitle" class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-4"></h3>
+              <div id="flashOptionsContainer" class="space-y-3"></div>
+            </div>
+
+            <div id="flashFeedbackBox" class="hidden p-4 rounded-xl text-xs leading-relaxed border"></div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+              <button onclick="terminateFlashTest()" class="text-xs font-bold text-slate-400 hover:text-rose-600">
+                Quit & Save
+              </button>
+              <button id="flashNextBtn" onclick="nextFlashQuestion()" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow">
+                Next Question
+              </button>
+            </div>
+          </div>
+
+          <div id="flashResultScreen" class="hidden text-center py-10 space-y-4">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black" id="flashResultIcon"></div>
+            <h3 class="text-2xl font-black text-slate-800" id="flashResultHeadline">Test Completed</h3>
+            <p id="flashResultSummary" class="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed"></p>
+            <div class="pt-4 flex justify-center gap-3">
+              <button onclick="exitFlashResults()" class="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 shadow">
+                Back to Drills
+              </button>
+              <button onclick="switchTab('dashboard')" class="px-5 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-200">
+                View Trends
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 5. FOUNDATION 60-MIN MOCK EXAM ================= -->
+      <section id="panel-foundation" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          
+          <div id="mockIntroScreen" class="space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Official Exam Conditions</span>
+                <h2 class="text-xl font-extrabold text-slate-800">PRINCE2® Foundation Full Simulator</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Strict 60-Minute Countdown • 60% Benchmark (36/60)</p>
+              </div>
+              <div class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full font-bold">
+                Closed-Book Exam
+              </div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-xs text-slate-600 space-y-2">
+              <p class="font-bold text-slate-800 text-sm">Exam Rules & Parameters:</p>
+              <ul class="list-disc pl-4 space-y-1">
+                <li>Total time: <strong>60 minutes</strong>. The exam auto-submits when the timer hits zero.</li>
+                <li>Questions cover the 5 Integrated Elements: Principles, People, Practices, Processes, and Context.</li>
+                <li>Detailed rationales and book references display upon completion.</li>
+              </ul>
+            </div>
+
+            <button onclick="startMockExam()" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 shadow">
+              Begin 60-Minute Timed Exam
+            </button>
+          </div>
+
+          <div id="mockActiveScreen" class="hidden space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <span class="text-xs font-bold text-indigo-600" id="mockProgressText">Question 1 of 15</span>
+                <span id="mockCategoryTag" class="ml-2 text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md"></span>
+              </div>
+              <div class="flex items-center gap-2 font-mono font-bold text-sm px-3 py-1 rounded-xl bg-rose-50 text-rose-700 border border-rose-200">
+                <i class="fa-solid fa-stopwatch"></i>
+                <span id="mockTimer">60:00</span>
+              </div>
+            </div>
+
+            <div>
+              <h3 id="mockQuestionTitle" class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-4"></h3>
+              <div id="mockOptionsContainer" class="space-y-3"></div>
+            </div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+              <button id="mockPrevBtn" onclick="prevMockQuestion()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 disabled:opacity-40" disabled>
+                Previous
+              </button>
+              <button id="mockNextBtn" onclick="nextMockQuestion()" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow">
+                Next Question
+              </button>
+            </div>
+          </div>
+
+          <div id="mockResultScreen" class="hidden py-8 text-center space-y-4">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black" id="mockResultIcon"></div>
+            <h3 class="text-2xl font-black text-slate-800" id="mockResultHeadline">Exam Submitted</h3>
+            <p id="mockResultSummary" class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed"></p>
+            <div class="pt-4 flex justify-center gap-3">
+              <button onclick="resetMockExam()" class="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 shadow">
+                Retake Exam
+              </button>
+              <button onclick="switchTab('dashboard')" class="px-5 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-200">
+                Inspect Trends
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 6. ACTIVE RECALL DECK ================= -->
+      <section id="panel-flashcards" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
+            <div>
+              <span class="text-xs font-bold text-amber-600 uppercase tracking-wide">Active Retrieval Training</span>
+              <h2 class="text-xl font-extrabold text-slate-800">Spaced Active Recall Deck</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Recite the role accountabilities and governance rules before revealing the card.</p>
+            </div>
+            <span class="text-xs font-bold text-slate-500" id="cardCounter">1 / 8</span>
+          </div>
+
+          <div class="max-w-xl mx-auto">
+            <div onclick="toggleCardFlip()" id="flashcard" class="cursor-pointer bg-gradient-to-br from-indigo-50/80 to-slate-50 border-2 border-indigo-200/80 rounded-3xl p-8 min-h-[280px] flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all select-none">
+              <span id="card-tag" class="text-[10px] uppercase tracking-widest font-extrabold bg-indigo-200 text-indigo-900 px-3 py-1 rounded-full mb-3"></span>
+              <h3 id="card-front" class="text-xl font-black text-slate-900 mb-2"></h3>
+              <div id="card-back" class="hidden text-xs sm:text-sm font-medium text-slate-700 space-y-2 leading-relaxed text-left"></div>
+              <span class="text-xs text-indigo-500 font-semibold mt-4 block">
+                <i class="fa-solid fa-arrows-rotate mr-1"></i> Click anywhere to flip
+              </span>
+            </div>
+
+            <div class="flex justify-center items-center gap-4 mt-6">
+              <button onclick="prevCard()" class="w-12 h-12 rounded-2xl border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <button onclick="markCardMastered()" class="px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-xs hover:bg-emerald-700 shadow">
+                <i class="fa-solid fa-check mr-1.5"></i> Mark as Mastered
+              </button>
+              <button onclick="nextCard()" class="w-12 h-12 rounded-2xl border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 7. CURATED 7 PRINCIPLES VIDEO HUB ================= -->
+      <section id="panel-videos" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="border-b border-slate-100 pb-4 mb-6">
+            <span class="text-xs font-bold text-rose-600 uppercase tracking-wide">Video Curriculum</span>
+            <h2 class="text-xl font-extrabold text-slate-800">The 7 Core Principles of PRINCE2®</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Dedicated visual explainers for every mandatory principle in the official manual.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 font-bold text-[10px] px-2 py-0.5 rounded">Principle 1</span>
+                  <span class="text-[11px] text-slate-400">Manual §2.1</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-sm">Ensure Continued Business Justification</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Why projects must remain viable, desirable, and achievable throughout their lifecycle—and why stopping a project is not a failure.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-200">
+                <a href="https://www.youtube.com/results?search_query=prince2+continued+business+justification" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1.5">
+                  <i class="fa-brands fa-youtube text-rose-600 text-sm"></i> Watch Principle Breakdown <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 font-bold text-[10px] px-2 py-0.5 rounded">Principle 2</span>
+                  <span class="text-[11px] text-slate-400">Manual §2.2</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-sm">Learn from Experience</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  How project teams pull lessons learned at start-up, during delivery, and at close rather than waiting for post-project reviews.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-200">
+                <a href="https://www.youtube.com/results?search_query=prince2+learn+from+experience" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1.5">
+                  <i class="fa-brands fa-youtube text-rose-600 text-sm"></i> Watch Lessons Management <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 font-bold text-[10px] px-2 py-0.5 rounded">Principle 3</span>
+                  <span class="text-[11px] text-slate-400">Manual §2.3</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-sm">Defined Roles, Responsibilities & Relationships</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  The tripartite governance balance: representing Business, User, and Supplier interests on the Project Board.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-200">
+                <a href="https://www.youtube.com/results?search_query=prince2+roles+and+responsibilities+project+board" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1.5">
+                  <i class="fa-brands fa-youtube text-rose-600 text-sm"></i> Watch Board Architecture <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 font-bold text-[10px] px-2 py-0.5 rounded">Principle 4</span>
+                  <span class="text-[11px] text-slate-400">Manual §2.5</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-sm">Manage by Stages</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Breaking the project into discreet non-overlapping management stages to establish stop-go control points and respect planning horizons.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-200">
+                <a href="https://www.youtube.com/results?search_query=prince2+manage+by+stages" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1.5">
+                  <i class="fa-brands fa-youtube text-rose-600 text-sm"></i> Watch Stage Boundaries <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 font-bold text-[10px] px-2 py-0.5 rounded">Principle 5</span>
+                  <span class="text-[11px] text-slate-400">Manual §2.4</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-sm">Manage by Exception (The 7 Tolerances)</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Delegating authority by defining tolerances across Cost, Time, Quality, Scope, Risk, Benefits, and Sustainability.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-200">
+                <a href="https://www.youtube.com/results?search_query=prince2+manage+by+exception+tolerances" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1.5">
+                  <i class="fa-brands fa-youtube text-rose-600 text-sm"></i> Watch Exception Escalation <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 font-bold text-[10px] px-2 py-0.5 rounded">Principle 6</span>
+                  <span class="text-[11px] text-slate-400">Manual §2.6</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-sm">Focus on Products</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Output-oriented planning via Product Breakdown Structures (PBS) and Product Descriptions before planning task activities.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-200">
+                <a href="https://www.youtube.com/results?search_query=prince2+product+based+planning" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1.5">
+                  <i class="fa-brands fa-youtube text-rose-600 text-sm"></i> Watch Product-Based Planning <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50 hover:bg-indigo-50/20 transition flex flex-col justify-between md:col-span-2">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-100 text-indigo-800 font-bold text-[10px] px-2 py-0.5 rounded">Principle 7</span>
+                  <span class="text-[11px] text-slate-400">Manual §2.7</span>
+                </div>
+                <h4 class="font-bold text-slate-800 text-sm">Tailor to Suit the Project Environment</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                  How to adapt PRINCE2 to agile delivery, scale, regulatory constraints, and commercial supplier contracts without compromising governance integrity.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-200">
+                <a href="https://www.youtube.com/results?search_query=prince2+tailoring+to+project+environment" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1.5">
+                  <i class="fa-brands fa-youtube text-rose-600 text-sm"></i> Watch Tailoring & Agile Integration <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT ENGINE -->
+  <script>
+    /* ==========================================================
+       1. BOOK CONTENTS DIRECTORY (PDF PAGE MAP)
+    ========================================================== */
+    const bookSections = [
+      { id: "ch1", num: 1, title: "Chapter 1: Introduction", page: 20 },
+      { id: "ch2", num: 2, title: "Chapter 2: Principles", page: 38 },
+      { id: "ch3", num: 3, title: "Chapter 3: People", page: 50 },
+      { id: "ch4", num: 4, title: "Chapter 4: Introduction to PRINCE2 Practices", page: 68 },
+      { id: "ch5", num: 5, title: "Chapter 5: Business Case", page: 74 },
+      { id: "ch6", num: 6, title: "Chapter 6: Organizing", page: 92 },
+      { id: "ch7", num: 7, title: "Chapter 7: Plans", page: 116 },
+      { id: "ch8", num: 8, title: "Chapter 8: Quality", page: 146 },
+      { id: "ch9", num: 9, title: "Chapter 9: Risk", page: 166 },
+      { id: "ch10", num: 10, title: "Chapter 10: Issues", page: 186 },
+      { id: "ch11", num: 11, title: "Chapter 11: Progress", page: 204 },
+      { id: "ch12", num: 12, title: "Chapter 12: Introduction to Processes", page: 232 },
+      { id: "ch13", num: 13, title: "Chapter 13: Starting Up a Project (SU)", page: 238 },
+      { id: "ch14", num: 14, title: "Chapter 14: Directing a Project (DP)", page: 248 },
+      { id: "ch15", num: 15, title: "Chapter 15: Initiating a Project (IP)", page: 258 },
+      { id: "ch16", num: 16, title: "Chapter 16: Controlling a Stage (CS)", page: 270 },
+      { id: "ch17", num: 17, title: "Chapter 17: Managing Product Delivery (MP)", page: 280 },
+      { id: "ch18", num: 18, title: "Chapter 18: Managing a Stage Boundary (SB)", page: 288 },
+      { id: "ch19", num: 19, title: "Chapter 19: Closing a Project (CP)", page: 296 }
+    ];
+
+    /* ==========================================================
+       2. SECTION-BY-SECTION QUESTION POOL
+    ========================================================== */
+    const sectionQuestions = {
+      "ch1": [
+        {
+          q: "Which of the following is NOT one of the five integrated elements of PRINCE2?",
+          options: ["Principles", "People", "Practices", "Contract Procurement"],
+          a: 3,
+          ref: "Section 1.2: PRINCE2 comprises principles, people, practices, processes, and project context."
+        },
+        {
+          q: "How does PRINCE2 define a project?",
+          options: [
+            "A continuous operational process delivering routine services",
+            "A temporary organization created for delivering business products according to an agreed business case",
+            "A portfolio of software tickets executed in sprints",
+            "A legal commercial contract between a client and supplier"
+          ],
+          a: 1,
+          ref: "Section 1.3: Definition of Project."
+        }
+      ],
+      "ch2": [
+        {
+          q: "What are the seven aspects of project performance managed using tolerances in PRINCE2 7?",
+          options: [
+            "Benefits, Costs, Time, Quality, Scope, Sustainability, and Risk",
+            "Revenue, Expenses, Timeline, Deliverables, Safety, Ecology, and Governance",
+            "Milestones, Budget, Team, Quality, Scope, Risk, and Architecture",
+            "Output, Outcome, Time, Resources, Scope, Risk, and Security"
+          ],
+          a: 0,
+          ref: "Section 2.4: Limits of delegated authority cover seven aspects."
+        },
+        {
+          q: "What is the absolute minimum number of stages required in a PRINCE2 project?",
+          options: ["One delivery stage", "Two stages: initiation and at least one delivery stage", "Three stages", "Four stages"],
+          a: 1,
+          ref: "Section 2.5: Manage by stages requires at least an initiation stage and one further stage."
+        }
+      ],
+      "ch3": [
+        {
+          q: "Under the PRINCE2 7 'People' element, who is responsible for creating psychological safety?",
+          options: [
+            "Only the Project Executive",
+            "All members of the project team through their day-to-day interactions",
+            "The external Project Assurance auditor",
+            "The Human Resources Department only"
+          ],
+          a: 1,
+          ref: "Section 3.3.2: All members of a project team are responsible for creating psychological safety."
+        }
+      ],
+      "ch4": [
+        {
+          q: "What is the purpose of a PRINCE2 Practice?",
+          options: [
+            "An optional guideline used only in software engineering",
+            "An aspect of project management that must be applied consistently throughout the lifecycle",
+            "A legal clause in a commercial contract",
+            "A checklist reserved exclusively for the closing process"
+          ],
+          a: 1,
+          ref: "Section 4.1: Definition of Practice."
+        }
+      ],
+      "ch5": [
+        {
+          q: "Who holds single point accountability for the Business Case throughout the project?",
+          options: ["The Project Manager", "The Senior User", "The Project Executive", "The Team Manager"],
+          a: 2,
+          ref: "Section 5.6 & 6.2.4.1: The project executive secures funding and is accountable for the business case."
+        },
+        {
+          q: "What is an 'Outcome' in PRINCE2?",
+          options: [
+            "The tangible deliverable produced by an activity",
+            "The result of change, normally affecting real-world behaviour and circumstances",
+            "The net profit after operational handover",
+            "The stage exception report"
+          ],
+          a: 1,
+          ref: "Section 5.1: Outputs lead to capabilities which embed outcomes, allowing benefits to be realized."
+        }
+      ],
+      "ch6": [
+        {
+          q: "Which two roles cannot be combined on a PRINCE2 project under any circumstances?",
+          options: [
+            "Project Executive and Project Manager",
+            "Project Executive and Senior User",
+            "Project Manager and Team Manager",
+            "Project Manager and Project Support"
+          ],
+          a: 0,
+          ref: "Section 6.2.4.1: The project executive role cannot be combined with the project manager role."
+        }
+      ],
+      "ch7": [
+        {
+          q: "What is the first step of the product-based planning technique?",
+          options: [
+            "Create a Gantt chart schedule",
+            "Write the Project Product Description",
+            "Calculate the budget in a spreadsheet",
+            "Assign tasks to developers"
+          ],
+          a: 1,
+          ref: "Section 7.3.2: Product-based planning starts by writing the project product description."
+        }
+      ],
+      "ch8": [
+        {
+          q: "How does Quality Assurance differ from Project Assurance?",
+          options: [
+            "Quality Assurance is business-owned and independent of the project team; Project Assurance is board-owned.",
+            "They are identical terms.",
+            "Quality Assurance is executed by the Project Manager.",
+            "Project Assurance only tests software code."
+          ],
+          a: 0,
+          ref: "Section 8.2.3: Quality assurance is independent of the project management team."
+        }
+      ],
+      "ch9": [
+        {
+          q: "How does PRINCE2 define an uncertainty with a positive impact on project objectives?",
+          options: ["A windfall", "An opportunity", "A benefit", "A concession"],
+          a: 1,
+          ref: "Section 9.1: PRINCE2 uses 'threat' for negative risks and 'opportunity' for positive risks."
+        }
+      ],
+      "ch10": [
+        {
+          q: "Why might a Project Board establish a Change Authority?",
+          options: [
+            "To relieve senior management from being overwhelmed with change requests on complex projects",
+            "To remove all authority from the Project Manager",
+            "To eliminate the need for a configuration log",
+            "Because PRINCE2 forbids the Board from assessing issues"
+          ],
+          a: 0,
+          ref: "Section 6.4.5 & Chapter 10: Change Authority delegates decision-making close to where knowledge resides."
+        }
+      ],
+      "ch11": [
+        {
+          q: "When must a Project Manager raise an Exception Report?",
+          options: [
+            "At the scheduled end of every month",
+            "As soon as a stage or project tolerance is forecast to be exceeded",
+            "Only after a budget has officially run dry",
+            "When the Project Board disbands"
+          ],
+          a: 1,
+          ref: "Section 2.4 & Chapter 11: Manage by Exception requires immediate escalation upon forecast breach."
+        }
+      ],
+      "ch12": [
+        {
+          q: "Which organizational layer executes the 'Directing a Project' process?",
+          options: ["The Business layer", "The Project Board", "The Project Manager", "The Team Managers"],
+          a: 1,
+          ref: "Section 12.2 & Chapter 14: Directing a Project is owned by the Project Board."
+        }
+      ],
+      "ch13": [
+        {
+          q: "What is the primary trigger that activates the 'Starting up a Project' process?",
+          options: ["Project Initiation Documentation", "Project Mandate", "Highlight Report", "End Stage Report"],
+          a: 1,
+          ref: "Section 13.3: The project mandate from the business activates starting up a project."
+        }
+      ],
+      "ch14": [
+        {
+          q: "When does the 'Directing a Project' process run?",
+          options: [
+            "Only during the initiation stage",
+            "Continuously from project start-up authorization until project closure",
+            "Only when an exception occurs",
+            "Strictly after the project has closed"
+          ],
+          a: 1,
+          ref: "Chapter 14: DP starts upon initiation authorization and covers the entire project lifecycle."
+        }
+      ],
+      "ch15": [
+        {
+          q: "Which core document is assembled during the 'Initiating a Project' process to form the project contract?",
+          options: ["Work Package Description", "Project Initiation Documentation (PID)", "Product Checklist", "Daily Log"],
+          a: 1,
+          ref: "Section 4.3.1 & Chapter 15: The PID is assembled in initiating a project."
+        }
+      ],
+      "ch16": [
+        {
+          q: "Who is responsible for the day-to-day management in the 'Controlling a Stage' process?",
+          options: ["The Project Manager", "The Team Manager", "The Project Executive", "The Project Assurance"],
+          a: 0,
+          ref: "Chapter 16: Controlling a Stage is the domain of the Project Manager."
+        }
+      ],
+      "ch17": [
+        {
+          q: "What management product passes work formally from the Project Manager to the Team Manager?",
+          options: ["Project Brief", "Work Package Description", "Stage Plan", "Highlight Report"],
+          a: 1,
+          ref: "Section 7.5 & Chapter 17: Work packages are allocated in Managing Product Delivery."
+        }
+      ],
+      "ch18": [
+        {
+          q: "What does the Project Manager produce in 'Managing a Stage Boundary' to evaluate performance and plan the next stage?",
+          options: [
+            "End Stage Report and the next Stage Plan",
+            "Project Mandate and Lessons Log",
+            "Issue Register and Exception Report",
+            "Acceptance Certificate"
+          ],
+          a: 0,
+          ref: "Chapter 18: Managing a Stage Boundary reviews the current stage and plans the next."
+        }
+      ],
+      "ch19": [
+        {
+          q: "What happens to the Benefits Management Approach when the project closes?",
+          options: [
+            "It is destroyed as confidential",
+            "Accountability transfers to the Business layer/Senior User for post-project tracking",
+            "The Project Manager keeps it indefinitely",
+            "The Team Manager assumes ownership"
+          ],
+          a: 1,
+          ref: "Section 5.6 & Chapter 19: Post-project measurement transfers to the business/senior user."
+        }
+      ]
+    };
+
+    // Flatten master questions for random drills
+    const masterPool = [];
+    Object.keys(sectionQuestions).forEach(secKey => {
+      const secInfo = bookSections.find(s => s.id === secKey) || { title: secKey };
+      sectionQuestions[secKey].forEach((qItem, idx) => {
+        masterPool.push({
+          id: `${secKey}_${idx}`,
+          section: secInfo.title,
+          prompt: qItem.q,
+          options: qItem.options,
+          answer: qItem.a,
+          ref: qItem.ref
+        });
+      });
+    });
+
+    const activeRecallCards = [
+      {
+        tag: "Principle",
+        front: "Manage by Exception",
+        back: "<b>Rule:</b> Delegated authority via 7 performance tolerances: Benefits, Cost, Time, Quality, Scope, Sustainability, Risk.<br/><br/><b>Trigger:</b> If a tolerance breach is forecast, the PM must immediately raise an <i>Exception Report</i> to the Project Board."
+      },
+      {
+        tag: "Role Accountability",
+        front: "The Project Executive",
+        back: "<b>Role:</b> Single point of accountability for project success.<br/><br/><b>Key Responsibility:</b> Represents the Business viewpoint, secures funding, and owns the Business Case throughout the lifecycle. Cannot be combined with the Project Manager role."
+      },
+      {
+        tag: "Role Accountability",
+        front: "The Senior User",
+        back: "<b>Role:</b> Represents those who will use the project's products.<br/><br/><b>Key Responsibility:</b> Specifies user requirements, defines acceptance criteria, and remains accountable for post-project benefits realization."
+      },
+      {
+        tag: "Management Product",
+        front: "Project Initiation Documentation (PID)",
+        back: "<b>Rule:</b> The 'contract' between the Project Manager and Project Board.<br/><br/><b>Composition:</b> Contains project definition, business case, project plan, role descriptions, tailoring choices, and all management approaches."
+      },
+      {
+        tag: "Practices: Quality",
+        front: "Project Assurance vs Quality Assurance",
+        back: "<b>Project Assurance:</b> Owned by Project Board members to assure themselves the project is being managed correctly. Independent of PM.<br/><br/><b>Quality Assurance:</b> Owned by the business entity outside the project to verify organizational quality standards."
+      },
+      {
+        tag: "Practices: Plans",
+        front: "Product Breakdown Structure (PBS)",
+        back: "<b>Definition:</b> A hierarchy of all products (outputs) to be created during a plan.<br/><br/><b>Method:</b> Focuses on deliverables first, leading into the Product Flow Diagram and Work Breakdown Structure (WBS)."
+      },
+      {
+        tag: "Practices: Progress",
+        front: "Exception Plan",
+        back: "<b>Definition:</b> Prepared only in response to a Project Board request following an Exception Report.<br/><br/><b>Scope:</b> Replaces the existing Stage Plan (or Project Plan) to restore controlled direction."
+      },
+      {
+        tag: "Core Principle",
+        front: "Tailor to Suit the Project",
+        back: "<b>Mandate:</b> PRINCE2 must be adapted to size, complexity, delivery method (Agile/Waterfall), and risk.<br/><br/><b>Constraint:</b> Tailoring can alter documentation and terminology, but must uphold all 7 Principles."
+      }
+    ];
+
+    /* ==========================================================
+       3. APPLICATION STATE & STORAGE
+    ========================================================== */
+    let appState = JSON.parse(localStorage.getItem('p2_full_app_state')) || {
+      readSections: {}, // { 'ch1': true }
+      currentSection: "ch1",
+      testHistory: [],
+      sectionScores: {}, // { 'ch1': { correct: 2, total: 2 } }
+      masteredCards: []
+    };
+
+    function saveAppState() {
+      localStorage.setItem('p2_full_app_state', JSON.stringify(appState));
+      updateGlobalMetricsUI();
+    }
+
+    /* ==========================================================
+       4. TAB SWITCHING
+    ========================================================== */
+    function switchTab(tabId) {
+      const tabs = ['reader', 'dashboard', 'sectionquizzes', 'flashtests', 'foundation', 'flashcards', 'videos'];
+      tabs.forEach(t => {
+        document.getElementById(`panel-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`nav-${t}`);
+        btn.classList.remove('bg-indigo-50', 'text-indigo-700');
+        btn.classList.add('text-slate-600');
+      });
+
+      document.getElementById(`panel-${tabId}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      activeNav.classList.add('bg-indigo-50', 'text-indigo-700');
+      activeNav.classList.remove('text-slate-600');
+
+      if (tabId === 'dashboard') {
+        renderDashboardAnalytics();
+      }
+    }
+
+    /* ==========================================================
+       5. PDF READER & SECTION DIRECTORY
+    ========================================================== */
+    function initReaderDirectory() {
+      const select = document.getElementById('chapterSelect');
+      const quizSelect = document.getElementById('quizSectionChooser');
+      select.innerHTML = '';
+      quizSelect.innerHTML = '';
+
+      bookSections.forEach(sec => {
+        const isRead = !!appState.readSections[sec.id];
+        const opt = document.createElement('option');
+        opt.value = sec.id;
+        opt.innerText = `${sec.title} (p.${sec.page}) ${isRead ? '✓ Read' : '• Unread'}`;
+        select.appendChild(opt);
+
+        const qOpt = document.createElement('option');
+        qOpt.value = sec.id;
+        qOpt.innerText = sec.title;
+        quizSelect.appendChild(qOpt);
+      });
+
+      select.value = appState.currentSection;
+      quizSelect.value = appState.currentSection;
+      loadSectionInReader(appState.currentSection);
+    }
+
+    function onSelectChapter(secId) {
+      appState.currentSection = secId;
+      saveAppState();
+      loadSectionInReader(secId);
+    }
+
+    function loadSectionInReader(secId) {
+      const sec = bookSections.find(s => s.id === secId) || bookSections[0];
+      document.getElementById('currentSectionTitle').innerText = sec.title;
+
+      // Update iframe source with PDF anchor
+      const frame = document.getElementById('pdfEmbedFrame');
+      frame.src = `Managing-Successful-Projects-With-PRINCE2-7.pdf#page=${sec.page}`;
+
+      updateReadButtonUI(sec.id);
+      updateGlobalMetricsUI();
+    }
+
+    function updateReadButtonUI(secId) {
+      const btn = document.getElementById('btnMarkRead');
+      const isRead = !!appState.readSections[secId];
+      if (isRead) {
+        btn.className = "px-3.5 py-2 text-xs font-bold rounded-xl transition bg-emerald-100 text-emerald-800 border border-emerald-300";
+        btn.innerHTML = '<i class="fa-solid fa-square-check mr-1.5 text-emerald-600"></i> Read (Click to Undo)';
+      } else {
+        btn.className = "px-3.5 py-2 text-xs font-bold rounded-xl transition border border-slate-300 text-slate-700 hover:bg-slate-100";
+        btn.innerHTML = '<i class="fa-regular fa-square mr-1.5"></i> Mark Section as Read';
+      }
+    }
+
+    function toggleCurrentReadStatus() {
+      const secId = appState.currentSection;
+      if (appState.readSections[secId]) {
+        delete appState.readSections[secId];
+      } else {
+        appState.readSections[secId] = true;
+      }
+      saveAppState();
+      initReaderDirectory();
+    }
+
+    function jumpToCurrentQuiz() {
+      switchTab('sectionquizzes');
+      loadQuizForSection(appState.currentSection);
+    }
+
+    /* ==========================================================
+       6. SECTION KNOWLEDGE CHECKS
+    ========================================================== */
+    let currentSQId = "ch1";
+    let curSQIndex = 0;
+    let sqAnswers = {};
+
+    function loadQuizForSection(secId) {
+      currentSQId = secId;
+      curSQIndex = 0;
+      sqAnswers = {};
+      const sec = bookSections.find(s => s.id === secId);
+      document.getElementById('quizHeaderTitle').innerText = `${sec.title} - Knowledge Check`;
+      document.getElementById('quizSectionChooser').value = secId;
+
+      document.getElementById('sectionQuizActiveContainer').classList.remove('hidden');
+      document.getElementById('sectionQuizScoreCard').classList.add('hidden');
+
+      renderSQ();
+    }
+
+    function renderSQ() {
+      const qList = sectionQuestions[currentSQId] || [];
+      if (qList.length === 0) {
+        document.getElementById('sqQuestionTitle').innerText = "Questions for this chapter are currently in review.";
+        document.getElementById('sqOptionsContainer').innerHTML = '';
+        return;
+      }
+
+      const q = qList[curSQIndex];
+      document.getElementById('sqProgressText').innerText = `Question ${curSQIndex + 1} of ${qList.length}`;
+      document.getElementById('sqCategoryTag').innerText = bookSections.find(s => s.id === currentSQId).title;
+      document.getElementById('sqQuestionTitle').innerText = q.q;
+
+      const optBox = document.getElementById('sqOptionsContainer');
+      optBox.innerHTML = '';
+      const feedbackBox = document.getElementById('sqFeedbackBox');
+      const isAnswered = sqAnswers[curSQIndex] !== undefined;
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm font-medium transition flex items-center justify-between ${
+          !isAnswered ? 'border-slate-200 hover:bg-indigo-50/60' : ''
+        }`;
+
+        if (isAnswered) {
+          btn.disabled = true;
+          if (idx === q.a) {
+            btn.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900', 'font-semibold');
+            btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+          } else if (idx === sqAnswers[curSQIndex]) {
+            btn.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+            btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-circle-xmark text-rose-500"></i>`;
+          } else {
+            btn.classList.add('border-slate-200', 'opacity-40');
+            btn.innerHTML = `<span>${opt}</span>`;
+          }
+        } else {
+          btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-slate-300"></i>`;
+          btn.onclick = () => selectSQAnswer(idx);
+        }
+
+        optBox.appendChild(btn);
+      });
+
+      if (isAnswered) {
+        feedbackBox.classList.remove('hidden');
+        feedbackBox.className = 'p-3.5 rounded-xl text-xs leading-relaxed border ' +
+          (sqAnswers[curSQIndex] === q.a ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900');
+        feedbackBox.innerHTML = `<strong>Manual Citation:</strong> ${q.ref}`;
+      } else {
+        feedbackBox.classList.add('hidden');
+      }
+
+      document.getElementById('sqPrevBtn').disabled = curSQIndex === 0;
+      document.getElementById('sqNextBtn').innerText = curSQIndex === qList.length - 1 ? 'Finish Section Test' : 'Next Question';
+    }
+
+    function selectSQAnswer(idx) {
+      sqAnswers[curSQIndex] = idx;
+      renderSQ();
+    }
+
+    function prevSQ() {
+      if (curSQIndex > 0) {
+        curSQIndex--;
+        renderSQ();
+      }
+    }
+
+    function nextSQ() {
+      const qList = sectionQuestions[currentSQId] || [];
+      if (curSQIndex < qList.length - 1) {
+        curSQIndex++;
+        renderSQ();
+      } else {
+        finishSQ();
+      }
+    }
+
+    function finishSQ() {
+      const qList = sectionQuestions[currentSQId] || [];
+      let score = 0;
+      qList.forEach((q, idx) => {
+        if (sqAnswers[idx] === q.a) score++;
+      });
+
+      const pct = Math.round((score / qList.length) * 100);
+
+      // Save to section scores
+      appState.sectionScores[currentSQId] = { correct: score, total: qList.length, pct: pct };
+      appState.testHistory.push({
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+        type: `Section (${bookSections.find(s=>s.id===currentSQId).title.substring(0,10)})`,
+        score: score,
+        total: qList.length,
+        pct: pct
+      });
+      saveAppState();
+
+      document.getElementById('sectionQuizActiveContainer').classList.add('hidden');
+      const scoreCard = document.getElementById('sectionQuizScoreCard');
+      scoreCard.classList.remove('hidden');
+
+      const icon = document.getElementById('sqResultIcon');
+      if (pct >= 60) {
+        icon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black bg-emerald-100 text-emerald-600';
+        icon.innerHTML = '<i class="fa-solid fa-award"></i>';
+        document.getElementById('sqResultTitle').innerText = 'Section Mastered!';
+      } else {
+        icon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black bg-rose-100 text-rose-600';
+        icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        document.getElementById('sqResultTitle').innerText = 'Review Recommended';
+      }
+
+      document.getElementById('sqResultScoreText').innerHTML = `
+        You scored <strong>${score} out of ${qList.length}</strong> (${pct}%).<br/>
+        This score is logged in your diagnostic dashboard.
+      `;
+    }
+
+    function retakeCurrentSQ() {
+      loadQuizForSection(currentSQId);
+    }
+
+    /* ==========================================================
+       7. TIMED FLASH TESTS
+    ========================================================== */
+    let flashQuizData = [];
+    let curFlashIdx = 0;
+    let flashUserAnswers = {};
+    let flashTimerInterval = null;
+    let flashTimeRemaining = 0;
+
+    function startFlashTest(qCount) {
+      const shuffled = [...masterPool].sort(() => 0.5 - Math.random());
+      flashQuizData = shuffled.slice(0, Math.min(qCount, masterPool.length));
+      curFlashIdx = 0;
+      flashUserAnswers = {};
+      flashTimeRemaining = qCount * 60; // 5, 10, or 15 mins
+
+      document.getElementById('flashSetupScreen').classList.add('hidden');
+      document.getElementById('flashResultScreen').classList.add('hidden');
+      document.getElementById('flashActiveScreen').classList.remove('hidden');
+
+      renderFlashQuestion();
+      startFlashTimer();
+    }
+
+    function startFlashTimer() {
+      clearInterval(flashTimerInterval);
+      updateFlashTimerUI();
+      flashTimerInterval = setInterval(() => {
+        flashTimeRemaining--;
+        updateFlashTimerUI();
+        if (flashTimeRemaining <= 0) {
+          clearInterval(flashTimerInterval);
+          submitFlashTest(true);
+        }
+      }, 1000);
+    }
+
+    function updateFlashTimerUI() {
+      const mins = Math.floor(flashTimeRemaining / 60);
+      const secs = flashTimeRemaining % 60;
+      document.getElementById('flashTimer').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function renderFlashQuestion() {
+      const q = flashQuizData[curFlashIdx];
+      document.getElementById('flashProgressText').innerText = `Question ${curFlashIdx + 1} of ${flashQuizData.length}`;
+      document.getElementById('flashCategoryBadge').innerText = q.section;
+      document.getElementById('flashQuestionTitle').innerText = q.prompt;
+
+      const optBox = document.getElementById('flashOptionsContainer');
+      optBox.innerHTML = '';
+      const feedbackBox = document.getElementById('flashFeedbackBox');
+      const isAnswered = flashUserAnswers[curFlashIdx] !== undefined;
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm font-medium transition flex items-center justify-between ${
+          !isAnswered ? 'border-slate-200 hover:bg-indigo-50/50 hover:border-indigo-300' : ''
+        }`;
+
+        if (isAnswered) {
+          btn.disabled = true;
+          if (idx === q.answer) {
+            btn.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900', 'font-semibold');
+            btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+          } else if (idx === flashUserAnswers[curFlashIdx]) {
+            btn.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+            btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-circle-xmark text-rose-500"></i>`;
+          } else {
+            btn.classList.add('border-slate-200', 'opacity-40');
+            btn.innerHTML = `<span>${opt}</span>`;
+          }
+        } else {
+          btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-slate-300"></i>`;
+          btn.onclick = () => selectFlashAnswer(idx);
+        }
+
+        optBox.appendChild(btn);
+      });
+
+      if (isAnswered) {
+        feedbackBox.classList.remove('hidden');
+        feedbackBox.className = 'p-3.5 rounded-xl text-xs leading-relaxed border ' +
+          (flashUserAnswers[curFlashIdx] === q.answer ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900');
+        feedbackBox.innerHTML = `<strong>Manual Reference:</strong> ${q.ref}`;
+      } else {
+        feedbackBox.classList.add('hidden');
+      }
+
+      document.getElementById('flashNextBtn').innerText = 
+        curFlashIdx === flashQuizData.length - 1 ? 'Submit Test' : 'Next Question';
+    }
+
+    function selectFlashAnswer(idx) {
+      flashUserAnswers[curFlashIdx] = idx;
+      renderFlashQuestion();
+    }
+
+    function nextFlashQuestion() {
+      if (curFlashIdx < flashQuizData.length - 1) {
+        curFlashIdx++;
+        renderFlashQuestion();
+      } else {
+        submitFlashTest(false);
+      }
+    }
+
+    function terminateFlashTest() {
+      clearInterval(flashTimerInterval);
+      submitFlashTest(false);
+    }
+
+    function submitFlashTest(isTimeout) {
+      clearInterval(flashTimerInterval);
+      let score = 0;
+      flashQuizData.forEach((q, idx) => {
+        if (flashUserAnswers[idx] === q.answer) score++;
+      });
+      const pct = Math.round((score / flashQuizData.length) * 100);
+
+      appState.testHistory.push({
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+        type: `Flash (${flashQuizData.length}Q)`,
+        score: score,
+        total: flashQuizData.length,
+        pct: pct
+      });
+      saveAppState();
+
+      document.getElementById('flashActiveScreen').classList.add('hidden');
+      const resScreen = document.getElementById('flashResultScreen');
+      resScreen.classList.remove('hidden');
+
+      const icon = document.getElementById('flashResultIcon');
+      if (pct >= 60) {
+        icon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black bg-emerald-100 text-emerald-600';
+        icon.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+        document.getElementById('flashResultHeadline').innerText = isTimeout ? 'Time Expired - PASS' : 'Test Passed!';
+      } else {
+        icon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black bg-rose-100 text-rose-600';
+        icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        document.getElementById('flashResultHeadline').innerText = isTimeout ? 'Time Expired - DID NOT PASS' : 'Below 60% Benchmark';
+      }
+
+      document.getElementById('flashResultSummary').innerHTML = `
+        You scored <strong>${score} / ${flashQuizData.length}</strong> (${pct}%).
+      `;
+    }
+
+    function exitFlashResults() {
+      document.getElementById('flashResultScreen').classList.add('hidden');
+      document.getElementById('flashSetupScreen').classList.remove('hidden');
+    }
+
+    /* ==========================================================
+       8. FOUNDATION 60-MIN FULL MOCK
+    ========================================================== */
+    let mockQuizData = [];
+    let curMockIdx = 0;
+    let mockUserAnswers = {};
+    let mockTimerInterval = null;
+    let mockTimeRemaining = 3600; // 60 mins
+
+    function startMockExam() {
+      mockQuizData = [...masterPool].sort(() => 0.5 - Math.random()).slice(0, 15);
+      curMockIdx = 0;
+      mockUserAnswers = {};
+      mockTimeRemaining = 3600;
+
+      document.getElementById('mockIntroScreen').classList.add('hidden');
+      document.getElementById('mockResultScreen').classList.add('hidden');
+      document.getElementById('mockActiveScreen').classList.remove('hidden');
+
+      renderMockQuestion();
+      startMockTimer();
+    }
+
+    function startMockTimer() {
+      clearInterval(mockTimerInterval);
+      updateMockTimerUI();
+      mockTimerInterval = setInterval(() => {
+        mockTimeRemaining--;
+        updateMockTimerUI();
+        if (mockTimeRemaining <= 0) {
+          clearInterval(mockTimerInterval);
+          submitMockExam(true);
+        }
+      }, 1000);
+    }
+
+    function updateMockTimerUI() {
+      const mins = Math.floor(mockTimeRemaining / 60);
+      const secs = mockTimeRemaining % 60;
+      document.getElementById('mockTimer').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function renderMockQuestion() {
+      const q = mockQuizData[curMockIdx];
+      document.getElementById('mockProgressText').innerText = `Question ${curMockIdx + 1} of ${mockQuizData.length}`;
+      document.getElementById('mockCategoryTag').innerText = q.section;
+      document.getElementById('mockQuestionTitle').innerText = q.prompt;
+
+      const optBox = document.getElementById('mockOptionsContainer');
+      optBox.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        const isSelected = mockUserAnswers[curMockIdx] === idx;
+        btn.className = `w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm font-medium transition flex items-center justify-between ${
+          isSelected ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-semibold' : 'border-slate-200 hover:bg-slate-50'
+        }`;
+        btn.innerHTML = `<span>${opt}</span> <i class="${isSelected ? 'fa-solid fa-circle-check text-indigo-600' : 'fa-regular fa-circle text-slate-300'}"></i>`;
+        btn.onclick = () => {
+          mockUserAnswers[curMockIdx] = idx;
+          renderMockQuestion();
+        };
+        optBox.appendChild(btn);
+      });
+
+      document.getElementById('mockPrevBtn').disabled = curMockIdx === 0;
+      document.getElementById('mockNextBtn').innerText = curMockIdx === mockQuizData.length - 1 ? 'Submit Mock Exam' : 'Next Question';
+    }
+
+    function prevMockQuestion() {
+      if (curMockIdx > 0) {
+        curMockIdx--;
+        renderMockQuestion();
+      }
+    }
+
+    function nextMockQuestion() {
+      if (curMockIdx < mockQuizData.length - 1) {
+        curMockIdx++;
+        renderMockQuestion();
+      } else {
+        submitMockExam(false);
+      }
+    }
+
+    function submitMockExam(isTimeout) {
+      clearInterval(mockTimerInterval);
+      let score = 0;
+      mockQuizData.forEach((q, idx) => {
+        if (mockUserAnswers[idx] === q.answer) score++;
+      });
+      const pct = Math.round((score / mockQuizData.length) * 100);
+
+      appState.testHistory.push({
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+        type: "Mock 60m",
+        score: score,
+        total: mockQuizData.length,
+        pct: pct
+      });
+      saveAppState();
+
+      document.getElementById('mockActiveScreen').classList.add('hidden');
+      const resScreen = document.getElementById('mockResultScreen');
+      resScreen.classList.remove('hidden');
+
+      const icon = document.getElementById('mockResultIcon');
+      if (pct >= 60) {
+        icon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black bg-emerald-100 text-emerald-600';
+        icon.innerHTML = '<i class="fa-solid fa-award"></i>';
+        document.getElementById('mockResultHeadline').innerText = isTimeout ? 'Time Expired - PASS' : 'Congratulations: PASS!';
+      } else {
+        icon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-black bg-rose-100 text-rose-600';
+        icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+        document.getElementById('mockResultHeadline').innerText = isTimeout ? 'Time Expired - FAILED' : 'Result: Below 60% Benchmark';
+      }
+
+      document.getElementById('mockResultSummary').innerHTML = `
+        You answered <strong>${score} out of ${mockQuizData.length}</strong> correctly (${pct}%).
+      `;
+    }
+
+    function resetMockExam() {
+      document.getElementById('mockResultScreen').classList.add('hidden');
+      document.getElementById('mockIntroScreen').classList.remove('hidden');
+    }
+
+    /* ==========================================================
+       9. ACTIVE RECALL DECK
+    ========================================================== */
+    let curCardIndex = 0;
+    let isCardShowingBack = false;
+
+    function renderActiveCard() {
+      const card = activeRecallCards[curCardIndex];
+      isCardShowingBack = false;
+      document.getElementById('card-tag').innerText = card.tag;
+      document.getElementById('card-front').innerText = card.front;
+      document.getElementById('card-back').innerHTML = card.back;
+      document.getElementById('card-front').classList.remove('hidden');
+      document.getElementById('card-back').classList.add('hidden');
+      document.getElementById('cardCounter').innerText = `${curCardIndex + 1} / ${activeRecallCards.length}`;
+    }
+
+    function toggleCardFlip() {
+      isCardShowingBack = !isCardShowingBack;
+      if (isCardShowingBack) {
+        document.getElementById('card-front').classList.add('hidden');
+        document.getElementById('card-back').classList.remove('hidden');
+      } else {
+        document.getElementById('card-front').classList.remove('hidden');
+        document.getElementById('card-back').classList.add('hidden');
+      }
+    }
+
+    function nextCard() {
+      curCardIndex = (curCardIndex + 1) % activeRecallCards.length;
+      renderActiveCard();
+    }
+
+    function prevCard() {
+      curCardIndex = (curCardIndex - 1 + activeRecallCards.length) % activeRecallCards.length;
+      renderActiveCard();
+    }
+
+    function markCardMastered() {
+      if (!appState.masteredCards.includes(curCardIndex)) {
+        appState.masteredCards.push(curCardIndex);
+        saveAppState();
+      }
+      nextCard();
+    }
+
+    /* ==========================================================
+       10. DIAGNOSTICS & PROGRESS REPORTING
+    ========================================================== */
+    let chartInstance = null;
+
+    function updateGlobalMetricsUI() {
+      const readCount = Object.keys(appState.readSections).length;
+      const totalSec = bookSections.length;
+      const bookPct = Math.round((readCount / totalSec) * 100);
+
+      document.getElementById('headerBookProgress').innerText = `${bookPct}%`;
+      document.getElementById('readingStatsText').innerText = `${readCount} of ${totalSec} Read`;
+      document.getElementById('readingProgressFill').style.width = `${bookPct}%`;
+
+      // Calculate Test Average
+      let totalQ = 0;
+      let totalC = 0;
+      appState.testHistory.forEach(h => {
+        totalQ += h.total;
+        totalC += h.score;
+      });
+      const avg = totalQ > 0 ? Math.round((totalC / totalQ) * 100) : 0;
+      document.getElementById('headerTestAvg').innerText = `${avg}%`;
+    }
+
+    function renderDashboardAnalytics() {
+      const readCount = Object.keys(appState.readSections).length;
+      document.getElementById('dashChaptersRead').innerText = `${readCount} / ${bookSections.length}`;
+      document.getElementById('dashTotalTests').innerText = appState.testHistory.length;
+
+      let totalQ = 0;
+      let totalC = 0;
+      appState.testHistory.forEach(h => {
+        totalQ += h.total;
+        totalC += h.score;
+      });
+      const avg = totalQ > 0 ? Math.round((totalC / totalQ) * 100) : 0;
+      document.getElementById('dashGlobalAccuracy').innerText = `${avg}%`;
+
+      // Breakdown per chapter
+      const breakdownEl = document.getElementById('sectionBreakdownList');
+      breakdownEl.innerHTML = '';
+      let lowestSec = null;
+      let lowestPct = 101;
+
+      bookSections.forEach(sec => {
+        const item = appState.sectionScores[sec.id];
+        const pct = item ? item.pct : null;
+
+        if (pct !== null && pct < lowestPct) {
+          lowestPct = pct;
+          lowestSec = sec.title;
+        }
+
+        const bar = document.createElement('div');
+        bar.className = "space-y-1";
+        bar.innerHTML = `
+          <div class="flex justify-between items-center text-slate-700">
+            <span class="font-medium truncate pr-2">${sec.title}</span>
+            <span class="font-bold ${pct === null ? 'text-slate-400' : pct >= 60 ? 'text-emerald-600' : 'text-rose-600'}">
+              ${pct === null ? 'Not Tested' : pct + '%'}
+            </span>
+          </div>
+          <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+            <div class="${pct === null ? 'bg-slate-200' : pct >= 60 ? 'bg-emerald-500' : 'bg-rose-500'} h-full transition-all" style="width: ${pct || 0}%"></div>
+          </div>
+        `;
+        breakdownEl.appendChild(bar);
+      });
+
+      const weakEl = document.getElementById('dashWeakSection');
+      if (lowestSec && lowestPct < 60) {
+        weakEl.innerText = `${lowestSec} (${lowestPct}%)`;
+      } else if (lowestSec) {
+        weakEl.innerText = "All taken > 60%";
+      } else {
+        weakEl.innerText = "No tests taken yet";
+      }
+
+      renderTrendChart();
+    }
+
+    function renderTrendChart() {
+      const ctx = document.getElementById('scoreTrendChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      const labels = appState.testHistory.slice(-8).map(h => `${h.date} (${h.type})`);
+      const dataPoints = appState.testHistory.slice(-8).map(h => h.pct);
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.length > 0 ? labels : ['No tests taken'],
+          datasets: [
+            {
+              label: 'Score (%)',
+              data: dataPoints.length > 0 ? dataPoints : [0],
+              borderColor: '#4f46e5',
+              backgroundColor: 'rgba(79, 70, 229, 0.08)',
+              borderWidth: 2.5,
+              tension: 0.3,
+              fill: true,
+              pointBackgroundColor: '#4f46e5',
+              pointRadius: 4
+            },
+            {
+              label: 'Benchmark (60%)',
+              data: Array(labels.length || 1).fill(60),
+              borderColor: '#ef4444',
+              borderWidth: 1.5,
+              borderDash: [5, 5],
+              fill: false,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { min: 0, max: 100, ticks: { stepSize: 20 } }
+          },
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+    }
+
+    function clearHistory() {
+      if (confirm("Reset all quiz scores and test analytics?")) {
+        appState.testHistory = [];
+        appState.sectionScores = {};
+        saveAppState();
+        renderDashboardAnalytics();
+      }
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      initReaderDirectory();
+      renderActiveCard();
+      updateGlobalMetricsUI();
+    });
+  </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
+  }
+</script>
+</body>
+</html>
