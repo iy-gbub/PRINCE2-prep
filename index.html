@@ -106,31 +106,40 @@
           </div>
         </div>
 
-        <!-- Direct Canvas Renderer -->
-        <div class="border border-slate-300 rounded-2xl overflow-hidden bg-slate-900 shadow-md">
-          <div class="bg-slate-800 text-white p-2 sm:p-2.5 px-3 sm:px-4 flex justify-between items-center text-xs">
-            <div class="flex items-center gap-1 sm:gap-2">
-              <button onclick="changePage(-1)" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 rounded font-bold">
-                <i class="fa-solid fa-chevron-left"></i>
+        <!-- FULL-SCREEN RESPONSIVE READER -->
+        <div id="pdfMasterContainer" class="border border-slate-300 rounded-2xl overflow-hidden bg-slate-950 shadow-md flex flex-col transition-all duration-200">
+          
+          <!-- Sticky Reader Toolbar -->
+          <div class="bg-slate-900/95 backdrop-blur text-white p-2 sm:p-2.5 px-3 sm:px-4 flex justify-between items-center text-xs border-b border-slate-800 shrink-0 z-30">
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <button onclick="scrollPage(-1)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg active:scale-95 transition" title="Previous Page">
+                <i class="fa-solid fa-chevron-up"></i>
               </button>
-              <span>Page <strong id="pdfCurrentPage">20</strong> of <span id="pdfTotalPages">--</span></span>
-              <button onclick="changePage(1)" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 rounded font-bold">
-                <i class="fa-solid fa-chevron-right"></i>
+              <span class="font-mono text-[11px] sm:text-xs">p. <strong id="pdfCurrentPage" class="text-indigo-400">20</strong> / <span id="pdfTotalPages">363</span></span>
+              <button onclick="scrollPage(1)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg active:scale-95 transition" title="Next Page">
+                <i class="fa-solid fa-chevron-down"></i>
               </button>
             </div>
 
             <div class="flex items-center gap-1 sm:gap-2">
-              <button onclick="zoomPdf(0.15)" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
-              <button onclick="zoomPdf(-0.15)" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
-              <a href="./Managing-Successful-Projects-With-PRINCE2-7.pdf" target="_blank" class="text-indigo-300 hover:text-white ml-2 text-[11px] underline">
-                External <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-              </a>
+              <button onclick="zoomPdf(0.2)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg" title="Zoom In">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+              </button>
+              <button onclick="zoomPdf(-0.2)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg" title="Zoom Out">
+                <i class="fa-solid fa-magnifying-glass-minus"></i>
+              </button>
+              <button onclick="fitWidth()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold" title="Fit to Screen Width">
+                Fit
+              </button>
+              <button onclick="toggleAppFullscreen()" id="btnFullscreen" class="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-bold text-[11px] flex items-center gap-1">
+                <i class="fa-solid fa-expand"></i> <span class="hidden sm:inline">Fullscreen</span>
+              </button>
             </div>
           </div>
 
-          <!-- Canvas Target Area -->
-          <div id="pdfViewportContainer" class="w-full h-[550px] sm:h-[680px] overflow-auto flex justify-center items-start p-2 sm:p-4 bg-slate-950 scrollbar-thin">
-            <canvas id="pdfCanvas" class="shadow-xl max-w-full rounded"></canvas>
+          <!-- Continuous Scroll Target Viewport -->
+          <div id="pdfViewportContainer" class="w-full h-[70vh] overflow-y-auto overflow-x-auto flex flex-col items-center p-2 sm:p-4 bg-slate-950 gap-4 scrollbar-thin touch-pan-y">
+            <!-- Continuous Page Wrappers Render Here -->
           </div>
         </div>
 
@@ -317,7 +326,7 @@
   <!-- JAVASCRIPT APP ENGINE -->
   <script>
     /* ==========================================================
-       1. BOOK CONTENTS DIRECTORY
+       1. BOOK CONTENTS DIRECTORY (PAGE MAPPINGS)
     ========================================================== */
     const bookSections = [
       { id: "ch1", title: "Chapter 1: Introduction", page: 20 },
@@ -346,15 +355,15 @@
     ========================================================== */
     const sectionQuestions = {
       "ch1": [
-        { q: "Which of the following is NOT one of the 5 integrated elements of PRINCE2?", options: ["Principles", "Practices", "People", "Commercial Procurement"], a: 3, ref: "Section 1.2: The five elements are Principles, People, Practices, Processes, and Project Context." },
-        { q: "How does PRINCE2 define a project?", options: ["A temporary organization created for delivering business products according to an agreed business case", "Continuous business operations and functional upkeep", "A series of ad-hoc tickets managed by a Scrum Master", "A legally binding outsourced supplier relationship"], a: 0, ref: "Section 1.3: Definition of a Project." }
+        { q: "Which of the following is NOT one of the 5 integrated elements of PRINCE2?", options: ["Principles", "Practices", "People", "Commercial Procurement"], a: 3, ref: "Section 1.2: Principles, People, Practices, Processes, Context." },
+        { q: "How does PRINCE2 define a project?", options: ["A temporary organization created for delivering business products according to an agreed business case", "Continuous routine BAU", "A software scrum backlog", "A commercial tender"], a: 0, ref: "Section 1.3: Definition of Project." }
       ],
       "ch2": [
-        { q: "What are the 7 performance targets managed using tolerances in PRINCE2 7?", options: ["Benefits, Costs, Time, Quality, Scope, Sustainability, and Risk", "Budget, Revenue, Resources, Safety, Governance, Time, Scope", "Hours, Milestones, Budget, Team, Plans, Tolerances, Risk", "Capital, Operating Expense, Timeline, ESG, Quality, Board, Scope"], a: 0, ref: "Section 2.4: Limits of delegated authority cover 7 performance aspects." },
-        { q: "What is the minimum number of stages permitted in any PRINCE2 project?", options: ["At least two stages: initiation and one delivery stage", "Only one delivery stage", "Three stages: Initiation, Build, Handover", "Four stages"], a: 0, ref: "Section 2.5: Manage by stages mandates an initiation stage and at least one further stage." }
+        { q: "What are the 7 performance targets managed using tolerances in PRINCE2 7?", options: ["Benefits, Costs, Time, Quality, Scope, Sustainability, and Risk", "Budget, Revenue, Resources, Safety, Governance, Time, Scope", "Hours, Milestones, Budget, Team, Plans, Tolerances, Risk", "Capital, Operating Expense, Timeline, ESG, Quality, Board, Scope"], a: 0, ref: "Section 2.4: 7 performance target tolerances." },
+        { q: "What is the minimum number of stages permitted in any PRINCE2 project?", options: ["At least two stages: initiation and one delivery stage", "Only one delivery stage", "Three stages: Initiation, Build, Handover", "Four stages"], a: 0, ref: "Section 2.5: Manage by stages mandates an initiation stage and at least one delivery stage." }
       ],
       "ch3": [
-        { q: "Under the PRINCE2 7 'People' element, who creates psychological safety?", options: ["All team members through their day-to-day interactions", "Only the Project Executive", "The HR Director only", "External Project Assurance only"], a: 0, ref: "Section 3.3.2: Psychological safety is fostered collectively through daily interactions." }
+        { q: "Under the PRINCE2 7 'People' element, who creates psychological safety?", options: ["All team members through their day-to-day interactions", "Only the Project Executive", "The HR Director only", "External Project Assurance only"], a: 0, ref: "Section 3.3.2: Psychological safety is fostered collectively." }
       ],
       "ch4": [
         { q: "What is a PRINCE2 Practice?", options: ["An aspect of project management that must be applied consistently throughout the project lifecycle", "An optional Agile backlog template", "A post-project audit checklist", "A commercial invoice standard"], a: 0, ref: "Section 4.1: Definition of Practice." }
@@ -373,10 +382,10 @@
         { q: "How does Quality Assurance differ from Project Assurance?", options: ["Quality Assurance is independent of the project team and business-owned; Project Assurance is board-owned", "They are identical terms", "The Project Manager performs Quality Assurance", "Project Assurance only reviews code quality"], a: 0, ref: "Section 8.2.3: QA is independent of the project management team." }
       ],
       "ch9": [
-        { q: "In PRINCE2, a risk with a positive impact on objectives is termed an:", options: ["Opportunity", "Windfall", "Upside benefit", "Asset"], a: 0, ref: "Section 9.1: PRINCE2 uses 'threat' for negative risks and 'opportunity' for positive risks." }
+        { q: "In PRINCE2, a risk with a positive impact on objectives is termed an:", options: ["Opportunity", "Windfall", "Upside benefit", "Asset"], a: 0, ref: "Section 9.1: 'Threat' for negative risks, 'opportunity' for positive risks." }
       ],
       "ch10": [
-        { q: "Why would a Project Board choose to appoint a Change Authority?", options: ["To relieve board overhead and expedite change decisions on large projects", "To dismiss the Project Manager", "To remove stage tolerances", "To draft the project mandate"], a: 0, ref: "Section 6.4.5: Change Authority delegates decision-making to the appropriate operational level." }
+        { q: "Why would a Project Board choose to appoint a Change Authority?", options: ["To relieve board overhead and expedite change decisions on large projects", "To dismiss the Project Manager", "To remove stage tolerances", "To draft the project mandate"], a: 0, ref: "Section 6.4.5: Change Authority delegates decision-making close to where knowledge resides." }
       ],
       "ch11": [
         { q: "When must the Project Manager produce and submit an Exception Report?", options: ["Immediately when a stage or project tolerance is forecast to be exceeded", "At the regular monthly board review", "Only after a stage plan runs completely out of money", "Never; the Board monitors this automatically"], a: 0, ref: "Section 2.4 & Chapter 11: Manage by Exception requires immediate escalation upon forecast breach." }
@@ -435,7 +444,7 @@
     /* ==========================================================
        3. PERSISTENT STORAGE
     ========================================================== */
-    let appState = JSON.parse(localStorage.getItem('p2_canvas_app_state')) || {
+    let appState = JSON.parse(localStorage.getItem('p2_canvas_scroll_state')) || {
       readSections: {},
       currentSection: "ch1",
       testHistory: [],
@@ -444,88 +453,198 @@
     };
 
     function saveAppState() {
-      localStorage.setItem('p2_canvas_app_state', JSON.stringify(appState));
+      localStorage.setItem('p2_canvas_scroll_state', JSON.stringify(appState));
       updateGlobalMetricsUI();
     }
 
     /* ==========================================================
-       4. MOZILLA PDF.JS CANVAS VIEWER ENGINE
+       4. TOUCH-ENABLED CONTINUOUS SCROLL PDF ENGINE (PDF.JS)
     ========================================================== */
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     const PDF_URL = './Managing-Successful-Projects-With-PRINCE2-7.pdf';
     let pdfDoc = null;
-    let currentPageNum = 20;
-    let pdfScale = 1.15;
-    let isRendering = false;
-    let pendingPageNum = null;
+    let currentVisiblePage = 20;
+    let pdfScale = 1.0;
+    let renderedPages = new Set();
+    let isFullscreenMode = false;
+
+    let touchStartDistance = 0;
+    let initialScaleOnPinch = 1.0;
 
     function initPdf() {
       pdfjsLib.getDocument(PDF_URL).promise.then(pdf => {
         pdfDoc = pdf;
         document.getElementById('pdfTotalPages').innerText = pdf.numPages;
-        const initialSec = bookSections.find(s => s.id === appState.currentSection) || bookSections[0];
-        currentPageNum = initialSec.page;
-        renderPdfPage(currentPageNum);
+        renderContinuousDocument();
+        setupTouchGestures();
       }).catch(err => {
         console.error("PDF Init Error:", err);
         document.getElementById('pdfViewportContainer').innerHTML = `
           <div class="text-rose-400 p-6 text-center text-xs space-y-2">
-            <p class="font-bold text-sm">Failed to load manual via Canvas.</p>
-            <p>Ensure <code>Managing-Successful-Projects-With-PRINCE2-7.pdf</code> is in the same directory as <code>index.html</code>.</p>
-            <a href="${PDF_URL}" target="_blank" class="inline-block mt-3 px-3 py-1.5 bg-indigo-600 text-white rounded-lg">Download PDF Directly</a>
+            <p class="font-bold text-sm">Failed to load manual.</p>
+            <p>Ensure <code>Managing-Successful-Projects-With-PRINCE2-7.pdf</code> is in the root directory.</p>
           </div>
         `;
       });
     }
 
-    function renderPdfPage(num) {
-      if (!pdfDoc) return;
-      isRendering = true;
-      pdfDoc.getPage(num).then(page => {
-        const canvas = document.getElementById('pdfCanvas');
-        const ctx = canvas.getContext('2d');
-        const container = document.getElementById('pdfViewportContainer');
-        const containerWidth = container.clientWidth > 40 ? container.clientWidth - 30 : 350;
-        
-        const unscaledViewport = page.getViewport({ scale: 1 });
-        const fitScale = (containerWidth / unscaledViewport.width) * pdfScale;
-        const viewport = page.getViewport({ scale: Math.max(fitScale, 0.7) });
+    function renderContinuousDocument() {
+      const container = document.getElementById('pdfViewportContainer');
+      container.innerHTML = '';
+      renderedPages.clear();
 
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const pageWrapper = document.createElement('div');
+        pageWrapper.id = `pdf-page-wrapper-${i}`;
+        pageWrapper.dataset.pageNumber = i;
+        pageWrapper.className = 'pdf-page-box relative flex justify-center items-center bg-white shadow-xl rounded-md transition-transform duration-100';
+        pageWrapper.style.minHeight = '350px';
+        pageWrapper.style.width = '100%';
+        pageWrapper.style.maxWidth = `${Math.min(window.innerWidth - 20, 850) * pdfScale}px`;
 
-        const renderContext = { canvasContext: ctx, viewport: viewport };
-        const renderTask = page.render(renderContext);
+        const placeholder = document.createElement('div');
+        placeholder.className = 'text-slate-400 text-xs py-10';
+        placeholder.innerText = `Loading Page ${i}...`;
+        pageWrapper.appendChild(placeholder);
 
-        renderTask.promise.then(() => {
-          isRendering = false;
-          document.getElementById('pdfCurrentPage').innerText = num;
-          if (pendingPageNum !== null) {
-            renderPdfPage(pendingPageNum);
-            pendingPageNum = null;
+        container.appendChild(pageWrapper);
+      }
+
+      container.onscroll = handleContainerScroll;
+      jumpToPage(currentVisiblePage);
+    }
+
+    function handleContainerScroll() {
+      const container = document.getElementById('pdfViewportContainer');
+      const wrappers = container.getElementsByClassName('pdf-page-box');
+      const containerTop = container.scrollTop;
+      const containerBottom = containerTop + container.clientHeight;
+
+      for (let wrapper of wrappers) {
+        const pageNum = parseInt(wrapper.dataset.pageNumber);
+        const top = wrapper.offsetTop - container.offsetTop;
+        const bottom = top + wrapper.clientHeight;
+
+        if (bottom >= containerTop - 400 && top <= containerBottom + 400) {
+          if (!renderedPages.has(pageNum)) {
+            renderIndividualPage(pageNum, wrapper);
           }
-        });
-      });
-    }
+        }
 
-    function queueRenderPage(num) {
-      if (isRendering) pendingPageNum = num;
-      else renderPdfPage(num);
-    }
-
-    function changePage(delta) {
-      if (!pdfDoc) return;
-      const target = currentPageNum + delta;
-      if (target >= 1 && target <= pdfDoc.numPages) {
-        currentPageNum = target;
-        queueRenderPage(currentPageNum);
+        if (top <= containerTop + 150 && bottom >= containerTop + 150) {
+          if (currentVisiblePage !== pageNum) {
+            currentVisiblePage = pageNum;
+            document.getElementById('pdfCurrentPage').innerText = pageNum;
+          }
+        }
       }
     }
 
+    function renderIndividualPage(pageNum, wrapper) {
+      renderedPages.add(pageNum);
+      pdfDoc.getPage(pageNum).then(page => {
+        const container = document.getElementById('pdfViewportContainer');
+        const availableWidth = Math.min(container.clientWidth - 24, 850);
+        const unscaledViewport = page.getViewport({ scale: 1 });
+        const computedScale = (availableWidth / unscaledViewport.width) * pdfScale;
+        const viewport = page.getViewport({ scale: Math.max(computedScale, 0.6) });
+
+        let canvas = wrapper.querySelector('canvas');
+        if (!canvas) {
+          wrapper.innerHTML = '';
+          canvas = document.createElement('canvas');
+          canvas.className = 'rounded-md shadow';
+          wrapper.appendChild(canvas);
+        }
+
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        wrapper.style.minHeight = `${viewport.height}px`;
+        wrapper.style.width = `${viewport.width}px`;
+
+        const renderContext = {
+          canvasContext: canvas.getContext('2d'),
+          viewport: viewport
+        };
+        page.render(renderContext);
+      });
+    }
+
+    function jumpToPage(num) {
+      if (!pdfDoc || num < 1 || num > pdfDoc.numPages) return;
+      currentVisiblePage = num;
+      document.getElementById('pdfCurrentPage').innerText = num;
+
+      const targetWrapper = document.getElementById(`pdf-page-wrapper-${num}`);
+      if (targetWrapper) {
+        targetWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        handleContainerScroll();
+      }
+    }
+
+    function scrollPage(delta) {
+      jumpToPage(currentVisiblePage + delta);
+    }
+
     function zoomPdf(delta) {
-      pdfScale = Math.max(0.6, Math.min(2.5, pdfScale + delta));
-      queueRenderPage(currentPageNum);
+      pdfScale = Math.max(0.7, Math.min(2.4, pdfScale + delta));
+      renderedPages.clear();
+      handleContainerScroll();
+    }
+
+    function fitWidth() {
+      pdfScale = 1.0;
+      renderedPages.clear();
+      handleContainerScroll();
+    }
+
+    function toggleAppFullscreen() {
+      isFullscreenMode = !isFullscreenMode;
+      const master = document.getElementById('pdfMasterContainer');
+      const viewport = document.getElementById('pdfViewportContainer');
+      const btn = document.getElementById('btnFullscreen');
+
+      if (isFullscreenMode) {
+        master.classList.add('fixed', 'inset-0', 'z-50', 'rounded-none', 'w-screen', 'h-screen');
+        viewport.classList.remove('h-[70vh]');
+        viewport.classList.add('h-[calc(100vh-50px)]');
+        btn.innerHTML = '<i class="fa-solid fa-compress"></i> <span class="hidden sm:inline">Exit</span>';
+        document.body.style.overflow = 'hidden';
+      } else {
+        master.classList.remove('fixed', 'inset-0', 'z-50', 'rounded-none', 'w-screen', 'h-screen');
+        viewport.classList.add('h-[70vh]');
+        viewport.classList.remove('h-[calc(100vh-50px)]');
+        btn.innerHTML = '<i class="fa-solid fa-expand"></i> <span class="hidden sm:inline">Fullscreen</span>';
+        document.body.style.overflow = '';
+      }
+      fitWidth();
+    }
+
+    function setupTouchGestures() {
+      const container = document.getElementById('pdfViewportContainer');
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          touchStartDistance = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+          );
+          initialScaleOnPinch = pdfScale;
+        }
+      }, { passive: true });
+
+      container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && touchStartDistance > 0) {
+          const currentDistance = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+          );
+          const factor = currentDistance / touchStartDistance;
+          pdfScale = Math.max(0.7, Math.min(2.4, initialScaleOnPinch * factor));
+          renderedPages.clear();
+          handleContainerScroll();
+        }
+      }, { passive: true });
     }
 
     /* ==========================================================
@@ -545,7 +664,7 @@
       curBtn.classList.remove('text-indigo-200');
 
       if (tabId === 'dashboard') renderDashboardAnalytics();
-      if (tabId === 'reader' && pdfDoc) queueRenderPage(currentPageNum);
+      if (tabId === 'reader' && pdfDoc) handleContainerScroll();
     }
 
     function initReaderDirectory() {
@@ -581,9 +700,7 @@
     function loadSectionInReader(secId) {
       const sec = bookSections.find(s => s.id === secId) || bookSections[0];
       document.getElementById('currentSectionTitle').innerText = sec.title;
-      currentPageNum = sec.page;
-      if (pdfDoc) queueRenderPage(currentPageNum);
-
+      jumpToPage(sec.page);
       updateReadButtonUI(sec.id);
       updateGlobalMetricsUI();
     }
